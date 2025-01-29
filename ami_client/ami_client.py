@@ -28,7 +28,7 @@ class AMIClient:
         self._action_id = 0
         self._connected = False
 
-        self.handler = OperationHandler()
+        self.handlers: list[OperationHandler] = [OperationHandler('main')]
 
     def connect(self) -> None:
         self._connected = True
@@ -52,14 +52,9 @@ class AMIClient:
                 except TimeoutError: continue
                 buffer += data
                 while b'\r\n\r\n' in buffer:
-                    dom_content, buffer = buffer.split(b'\r\n\r\n', 1)
-                    operation = self._parse_operation(dom_content.decode())
-
-                    if 'Event' in operation.keys():
-                        self.handler.handel_event(operation)
-
-                    elif 'Response' in operation.keys():
-                        self.handler.handel_response(operation)
+                    raw_operation, buffer = buffer.split(b'\r\n\r\n', 1)
+                    for handler in self.handlers:
+                        handler.create_operation(raw_operation)
 
 
         except OSError as e:
@@ -103,26 +98,16 @@ class AMIClient:
         while (time.time() - Start) < self._timeout:
             if not self._connected: break
             
-            response = self.handler.get_response(self._action_id)
+            response = self.handlers.get_response(self._action_id)
 
             if response:
-                self.handler.remove_response(self._action_id)
+                self.handlers.remove_response(self._action_id)
                 return response
             
             # For preventing locking application
             time.sleep(0.05)
 
         else: raise TimeoutError(f'Timeout while getting response. action: {action_name} - action id: {self._action_id}')
-
-
-    def _parse_operation(self, operation:str) -> dict:
-        lines = operation.strip().split('\r\n')
-        operation_dict = {}
-        for line in lines:
-            if 'Asterisk Call Manager' in line: continue
-            key, value = line.split(':', 1)
-            operation_dict[key.lstrip()] = value.lstrip().split(',') if ',' in value else value.lstrip()
-        return operation_dict
 
 
     def __enter__(self) -> None:
