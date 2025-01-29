@@ -21,7 +21,7 @@ class OperationHandler:
 
         if isinstance(events, str):
             events = [events,]
-        
+
         for event in events:
             if event not in self._event_function_map.keys():
                 self._event_function_map[event] = []
@@ -32,10 +32,10 @@ class OperationHandler:
         if events is None:
             self._events_functions.remove(function)
             return
-        
+
         if isinstance(events, str):
             events = [events,]
-        
+
         for event in events:
             self._event_function_map[event].remove(function)
 
@@ -44,7 +44,7 @@ class OperationHandler:
         action_id = int(response.get('ActionID'))
         if not action_id:
             raise TypeError('response is not in currect format')
-        
+
         if action_id in self._responses.keys():
             raise AMIException('Duplication in Action ID, please check the action number.')
 
