@@ -1,3 +1,5 @@
+from .hangup import Hangup
+
 event_map: dict = {
     'AGIExecEnd': '',
     'AGIExecStart': '',
@@ -85,7 +87,7 @@ event_map: dict = {
     'FailedACL': '',
     'Flash': '',
     'FullyBooted': '',
-    'Hangup': '',
+    'Hangup': Hangup,
     'HangupHandlerPop': '',
     'HangupHandlerPush': '',
     'HangupHandlerRun': '',
