@@ -1,6 +1,11 @@
+from typing import Type
+
+from ._base import Event
 from .hangup import Hangup
 
-event_map: dict = {
+EVENT = Type[Event]
+
+event_map: dict[str, EVENT] = {
     'AGIExecEnd': '',
     'AGIExecStart': '',
     'AOC-D': '',
