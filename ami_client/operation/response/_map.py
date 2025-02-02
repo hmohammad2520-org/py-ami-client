@@ -1,5 +1,6 @@
-from ._base import Response
 from typing import Type
+
+from ._base import Response
 
 
 RESPONSE = Type[Response]
