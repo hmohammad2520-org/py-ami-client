@@ -73,11 +73,11 @@ class AMIClient:
         response = self._send_action('Login',Username=self._username, Secret=self._secret)
         if not response:
             raise TimeoutError('Timeout while Logging in.')
-        
+
         if not response.get('Response') == 'Success' and response.get('Message') == 'Authentication accepted':
             raise AMIException('Access Deny, Wrong credentials or access is not permited.')
 
-    
+
     def logoff(self) -> None:
         self._send_action('logoff')
 

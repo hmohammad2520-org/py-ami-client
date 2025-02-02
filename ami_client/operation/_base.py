@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 class Operation:
     _raw: str
     _dict: dict
