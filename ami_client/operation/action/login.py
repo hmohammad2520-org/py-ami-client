@@ -5,7 +5,7 @@ from ._base import Action
 class Login(Action):
     def __init__(
             self,*,
-            ActionID: int|str,
+            ActionID: int|str = None,
             Username: str = None,
             Secret: str = None,
             AuthType: Literal['plain', 'MD5'] = None,
@@ -13,8 +13,8 @@ class Login(Action):
             Events: Union[Literal['on', 'off'], list[str]] = None,
     ) -> None:
 
-        self._asterisk_name = 'Login'
-        self._label = 'Login'
+        self.asterisk_name = 'Login'
+        self.label = 'Login'
 
         self.username = Username
         self.secret = Secret
@@ -32,4 +32,4 @@ class Login(Action):
         }
         filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        super().__init__(**filtered_kwargs)
+        super().__init__(Action=self.asterisk_name, **filtered_kwargs)

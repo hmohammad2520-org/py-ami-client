@@ -1,13 +1,17 @@
+from typing import Dict
 from .operation import Operation, Action, Event, Response
 from .operation import action_map, event_map, response_map
 
-class OperationHandler:
-    def __init__(self, name: str):
-        self.name = name
 
-        self.actions = []
-        self.events = []
-        self.responses = []
+class OperationHandler:
+    def __init__(self):
+        self.action_id = 0
+        self.event_id = 0
+        self.response_id = 0
+
+        self.actions: Dict[int, Action] = {}
+        self.events: Dict[int, Event] = {}
+        self.responses: Dict[int, Response] = {}
 
     def handel_operation(self, raw_operation) -> None:
         operation_dict = Operation.parse_raw_content(raw_operation)
@@ -15,38 +19,68 @@ class OperationHandler:
             if 'Action' in operation_dict.keys():
                 action_class = action_map.get(operation_dict['Action'])
                 if not action_class:
-                    raise ValueError(f'Unkhown Operation name from server: <Action {operation_dict['Response']}')
+                    # raise ValueError(f'Unkhown Operation name from server: <Action {operation_dict['Action']}>')
+                    print(f'Unkhown Action: {operation_dict['Action']}')
+                    return
 
                 action = action_class(**operation_dict)
-                self.handel_action(action)
+                self.add_action(action)
 
             elif 'Event' in operation_dict.keys():
                 event_class = event_map.get(operation_dict['Event'])
                 if not event_class:
-                    raise ValueError(f'Unkhown Operation name from server: <Event {operation_dict['Response']}')
+                    # raise ValueError(f'Unkhown Operation name from server: <Event {operation_dict['Event']}>')
+                    print(f'Unkhown Event: {operation_dict['Event']}')
+                    return
 
                 event = event_class(**operation_dict)
-                self.handel_event(event)
+                self.add_event(event)
 
             elif 'Response' in operation_dict.keys():
                 response_class = response_map.get(operation_dict['Response'])
                 if not response_class:
-                    raise ValueError(f'Unkhown Operation name from server: <Response {operation_dict['Response']}>')
+                    # raise ValueError(f'Unkhown Operation name from server: <Response {operation_dict['Response']}>')
+                    print(f'Unkhown Response: {operation_dict['Response']}')
+                    return
 
                 response = response_class(**operation_dict)
-                self.handel_response(response)
+                self.add_response(response)
 
             else:
                 raise ValueError('Parsed unkhown data from server')
 
         else:
             raise ValueError('Unable to parse the operation to dict -> got None')
-    
-    def handel_action(self, action: Action) -> None:
-        self.actions.append(action)
-    
-    def handel_event(self, event: Event) -> None:
-        self.events.append(event)
-    
-    def handel_response(self, response: Response) -> None:
-        self.responses.append(response)
+
+
+    def add_action(self, action: Action) -> None:
+        self.action_id += 1
+        action.list_id = self.action_id
+        self.actions[self.action_id] = action
+
+    def add_event(self, event: Event) -> None:
+        self.event_id += 1
+        event.list_id = self.event_id
+        self.events[self.event_id] = event
+
+    def add_response(self, response: Response) -> None:
+        self.response_id += 1
+        response.list_id = self.response_id
+        self.responses[self.response_id] = response
+
+
+    def get_response(self,*, response_id: int=None, action_id: int=None) -> Response | None:
+        if response_id:
+            return self.responses.get(response_id)
+
+        elif action_id:
+            for response in self.responses.values():
+                if response.action_id == action_id:
+                    return response
+
+        else:
+            raise ValueError('Provide response_id or action_id')
+
+    def remove_response(self, response: Response):
+        if response.list_id in self.responses:
+            self.responses.pop(response.list_id)

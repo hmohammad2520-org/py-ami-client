@@ -3,27 +3,24 @@ import time
 
 ASTERISK_BANNER: str = 'Asterisk Call Manager'
 
-ignore_list: list[str] = [ASTERISK_BANNER,]
-
 class Operation:
     def __init__(self, **kwargs):
-        self._raw: str = ''
-        self._dict: Dict[str, Any] = {}
-        self._asterisk_name: str = ''
-        self._label: str = ''
-        self._value_type_map: Dict[str, Type] = {}
-        self._timestamp: float = time.time()
+        self.list_id: int = None
+        self.raw: str = ''
+        self.dict: Dict[str, Any] = {}
+        self.asterisk_name: str = ''
+        self.label: str = ''
+        self.timestamp: float = time.time()
 
-        self._dict.update(kwargs)
-        self._raw = self.convert_to_raw_content(self._dict)
+        self.dict.update(kwargs)
+        self.raw = self.convert_to_raw_content(self.dict)
 
     @staticmethod
     def parse_raw_content(raw: str) -> Dict[str, Any]:
         lines = raw.strip().split('\r\n')
         operation_dict: Dict[str, Any] = {}
         for line in lines:
-            for ignore in ignore_list:
-                if ignore in line: continue
+            if ASTERISK_BANNER in line: continue
 
             key, value = line.split(':', 1)
             operation_dict[key.lstrip()] = value.lstrip()
@@ -40,7 +37,7 @@ class Operation:
         return raw_operation
 
     def __str__(self) -> str:
-        return f'<Operation: {self._asterisk_name}>'
+        return f'<Operation: {self.asterisk_name}>'
 
     def __repr__(self) -> str:
-        return f'<Operation: {self._asterisk_name}>'
+        return f'<Operation: {self.asterisk_name}>'

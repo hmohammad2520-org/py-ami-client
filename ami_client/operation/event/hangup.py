@@ -21,8 +21,8 @@ class Hangup(Event):
             Cause: str = None,
             Cause_txt: str = None,
     ) -> None:
-        self._asterisk_name = 'Hangup'
-        self._label = 'Hangup'
+        self.asterisk_name = 'Hangup'
+        self.label = 'Hangup'
 
         self.event = Event
         self.channel = Channel
