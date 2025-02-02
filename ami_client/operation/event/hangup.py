@@ -40,3 +40,5 @@ class Hangup(Event):
 
         self._asterisk_name = 'Hangup'
         self._label = 'Hangup'
+
+        super().__init__()
