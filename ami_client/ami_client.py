@@ -54,7 +54,7 @@ class AMIClient:
                 while b'\r\n\r\n' in buffer:
                     raw_operation, buffer = buffer.split(b'\r\n\r\n', 1)
                     for handler in self.handlers:
-                        handler.create_operation(raw_operation)
+                        handler.handel_operation(raw_operation)
 
 
         except OSError as e:
