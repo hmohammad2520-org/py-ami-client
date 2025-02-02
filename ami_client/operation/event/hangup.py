@@ -2,43 +2,65 @@ from ._base import Event
 
 class Hangup(Event):
     def __init__(
-            self,
-            channel:str = None,
-            channel_state:str = None,
-            channel_state_desc:str = None,
-            callerid_num:str = None,
-            callerid_name:str = None,
-            connected_line_num:str = None,
-            connected_line_name:str = None,
-            language:str = None,
-            account_code:str = None,
-            context:str = None,
-            exten:str = None,
-            priority:str = None,
-            uniqueid:str = None,
-            linkedid:str = None,
-            cause:str = None,
-            cause_txt:str = None,
-            ) -> None:
-
-        self.channel = channel
-        self.channel_state = channel_state
-        self.channel_state_desc = channel_state_desc
-        self.callerid_num = callerid_num
-        self.callerid_name = callerid_name
-        self.connected_line_num = connected_line_num
-        self.connected_line_name = connected_line_name
-        self.language = language
-        self.account_code = account_code
-        self.context = context
-        self.exten = exten
-        self.priority = priority
-        self.uniqueid = uniqueid
-        self.linkedid = linkedid
-        self.cause = cause
-        self.cause_txt = cause_txt
-
+            self, *,
+            Event: str = None,
+            Channel: str = None,
+            ChannelState: str = None,
+            ChannelStateDesc: str = None,
+            CallerIDNum: str = None,
+            CallerIDName: str = None,
+            ConnectedLineNum: str = None,
+            ConnectedLineName: str = None,
+            Language: str = None,
+            AccountCode: str = None,
+            Context: str = None,
+            Exten: str = None,
+            Priority: str = None,
+            Uniqueid: str = None,
+            Linkedid: str = None,
+            Cause: str = None,
+            Cause_txt: str = None,
+    ) -> None:
         self._asterisk_name = 'Hangup'
         self._label = 'Hangup'
 
-        super().__init__()
+        self.event = Event
+        self.channel = Channel
+        self.channel_state = ChannelState
+        self.channel_state_desc = ChannelStateDesc
+        self.callerid_num = CallerIDNum
+        self.callerid_name = CallerIDName
+        self.connected_line_num = ConnectedLineNum
+        self.connected_line_name = ConnectedLineName
+        self.language = Language
+        self.account_code = AccountCode
+        self.context = Context
+        self.exten = Exten
+        self.priority = Priority
+        self.uniqueid = Uniqueid
+        self.linkedid = Linkedid
+        self.cause = Cause
+        self.cause_txt = Cause_txt
+
+        kwargs = {
+            'Event': Event,
+            'Channel': Channel,
+            'ChannelState': ChannelState,
+            'ChannelStateDesc': ChannelStateDesc,
+            'CallerIDNum': CallerIDNum,
+            'CallerIDName': CallerIDName,
+            'ConnectedLineNum': ConnectedLineNum,
+            'ConnectedLineName': ConnectedLineName,
+            'Language': Language,
+            'AccountCode': AccountCode,
+            'Context': Context,
+            'Exten': Exten,
+            'Priority': Priority,
+            'Uniqueid': Uniqueid,
+            'Linkedid': Linkedid,
+            'Cause': Cause,
+            'Cause_txt': Cause_txt,
+        }
+        filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        super().__init__(**filtered_kwargs)
