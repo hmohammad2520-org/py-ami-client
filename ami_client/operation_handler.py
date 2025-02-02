@@ -1,5 +1,5 @@
 from typing import Dict
-from .operation import Operation, Action, Event, Response
+from .operation import Operation, Action, Event, Response, Unkhown
 from .operation import action_map, event_map, response_map
 
 
@@ -19,9 +19,7 @@ class OperationHandler:
             if 'Action' in operation_dict.keys():
                 action_class = action_map.get(operation_dict['Action'])
                 if not action_class:
-                    # raise ValueError(f'Unkhown Operation name from server: <Action {operation_dict['Action']}>')
-                    print(f'Unkhown Action: {operation_dict['Action']}')
-                    return
+                    action_class = Unkhown
 
                 action = action_class(**operation_dict)
                 self.add_action(action)
@@ -29,9 +27,7 @@ class OperationHandler:
             elif 'Event' in operation_dict.keys():
                 event_class = event_map.get(operation_dict['Event'])
                 if not event_class:
-                    # raise ValueError(f'Unkhown Operation name from server: <Event {operation_dict['Event']}>')
-                    print(f'Unkhown Event: {operation_dict['Event']}')
-                    return
+                    event_class = Unkhown
 
                 event = event_class(**operation_dict)
                 self.add_event(event)
@@ -39,9 +35,7 @@ class OperationHandler:
             elif 'Response' in operation_dict.keys():
                 response_class = response_map.get(operation_dict['Response'])
                 if not response_class:
-                    # raise ValueError(f'Unkhown Operation name from server: <Response {operation_dict['Response']}>')
-                    print(f'Unkhown Response: {operation_dict['Response']}')
-                    return
+                    response_class = Unkhown
 
                 response = response_class(**operation_dict)
                 self.add_response(response)

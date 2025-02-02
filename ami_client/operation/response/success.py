@@ -17,7 +17,7 @@ class Success(Response):
         kwargs = {
             'Response': Response,
             'ActionID': ActionID,
-            #'Message': Message,
+            'Message': Message,
         }
         kwargs.update(additional_kwargs)
         filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
