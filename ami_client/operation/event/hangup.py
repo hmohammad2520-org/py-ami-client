@@ -20,7 +20,9 @@ class Hangup(Event):
             Linkedid: str = None,
             Cause: str = None,
             Cause_txt: str = None,
+            **additional_kwargs
     ) -> None:
+
         self.asterisk_name = 'Hangup'
         self.label = 'Hangup'
 
@@ -61,6 +63,7 @@ class Hangup(Event):
             'Cause': Cause,
             'Cause_txt': Cause_txt,
         }
+        kwargs.update(additional_kwargs)
         filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
         super().__init__(**filtered_kwargs)

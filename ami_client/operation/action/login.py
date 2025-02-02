@@ -11,6 +11,7 @@ class Login(Action):
             AuthType: Literal['plain', 'MD5'] = None,
             Key: str = None,
             Events: Union[Literal['on', 'off'], list[str]] = None,
+            **additional_kwargs
     ) -> None:
 
         self.asterisk_name = 'Login'
@@ -30,6 +31,7 @@ class Login(Action):
             'Key': Key,
             'Events': Events,
         }
+        kwargs.update(additional_kwargs)
         filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
         super().__init__(Action=self.asterisk_name, **filtered_kwargs)
