@@ -1,5 +1,6 @@
-from ami_client.operation._base import Operation
+from ...operation._base import Operation
+
 
 class Event(Operation):
-    _asterisk_name: str
-    _label: str
+    def __init__(self):
+        super().__init__()

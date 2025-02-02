@@ -1,19 +1,46 @@
-from datetime import datetime
+from typing import Any, Type
+import time
+
+ASTERISK_BANNER: str = 'Asterisk Call Manager'
+
+ignore_list: list[str] = [ASTERISK_BANNER,]
 
 class Operation:
-    _raw: str
-    _dict: dict
-    _value_type_map: dict
-    timestamp: datetime
+    def __init__(self):
+        self._raw: str = ''
+        self._dict: dict[str, Any] = {}
+        self._asterisk_name: str = ''
+        self._label: str = ''
+        self._value_type_map: dict[str, Type] = {}
+
+        self._timestamp: float = time.time()
+
 
     @staticmethod
-    def parse_raw_content(raw:str) -> dict:
+    def parse_raw_content(raw: str) -> dict:
         lines = raw.strip().split('\r\n')
-        operation_dict = {}
+        operation_dict: dict[str, Any] = {}
         for line in lines:
-            if 'Asterisk Call Manager' in line: continue
+            for ignore in ignore_list:
+                if ignore in line: continue
+
             key, value = line.split(':', 1)
-            operation_dict[key.lstrip()] = value.lstrip().split(',') if ',' in value else value.lstrip()
+            operation_dict[key.lstrip()] = value.lstrip()
 
         return operation_dict
 
+
+    @staticmethod
+    def convert_to_raw_content(operation_dict: dict[str, Any]) -> str:
+        raw_operation: str= ''
+        for key, value in operation_dict.items():
+            raw_operation += f'{key}: {value}\r\n'
+
+        raw_operation += '\r\n'
+        return raw_operation
+
+    def __str__(self) -> str:
+        return f'<NotImplementedYet>'
+
+    def __reper__(self) -> str:
+        return f'<NotImplementedYet>'

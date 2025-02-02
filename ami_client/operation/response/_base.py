@@ -1,4 +1,5 @@
-from ami_client.operation._base import Operation
+from ...operation._base import Operation
 
 class Response(Operation):
-    ...
+    def __init__(self):
+        super().__init__()
