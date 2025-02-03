@@ -1,10 +1,10 @@
-from typing import Dict
+from typing import Dict, List
 
 from .exeptions import AMIException
 
+from .channel import Channel
 from .operation import Operation, Action, Event, Response, Unkhown
 from .operation import action_map, event_map, response_map
-from .channel import Channel
 
 class Registry:
     def __init__(self) -> None:
@@ -19,10 +19,10 @@ class Registry:
 
         self.channels: Dict[str, Channel] = {}
 
-        self.white_list: list[str] = []
-        self.black_list: list[str] = []
+        self.white_list: List[str] = []
+        self.black_list: List[str] = []
 
-    def register_operation(self, raw_operation) -> None:
+    def register_operation(self, raw_operation: str) -> None:
         operation_dict = Operation.parse_raw_content(raw_operation)
         if operation_dict:
             if 'Action' in operation_dict.keys():
