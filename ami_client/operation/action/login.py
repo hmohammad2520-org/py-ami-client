@@ -39,4 +39,5 @@ class Login(Action):
         super().__init__(Action=self._asterisk_name, **filtered_kwargs)
 
     def send(self, client) -> Success:
+        self.response: Success
         return super().send(client)
