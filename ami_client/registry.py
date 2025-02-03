@@ -1,17 +1,20 @@
 from typing import Dict
+
+from .exeptions import AMIException
+
 from .operation import Operation, Action, Event, Response, Unkhown
 from .operation import action_map, event_map, response_map
 from .channel import Channel
 
-class Registery:
-    def __init__(self):
-        self.action_id = 0
+class Registry:
+    def __init__(self) -> None:
+        self.action_id: int = 0
         self.actions: Dict[int, Action] = {}
 
-        self.event_id = 0
+        self.event_id: int = 0
         self.events: Dict[int, Event] = {}
 
-        self.response_id = 0
+        self.response_id: int = 0
         self.responses: Dict[int, Response] = {}
 
         self.channels: Dict[str, Channel] = {}
@@ -32,7 +35,9 @@ class Registery:
                 operation_class = response_map.get(operation_dict['Response'])
 
             else:
-                raise ValueError('Parsed unkhown data from server')
+                raise AMIException.ClntSide.UnknownOperation(
+                    'Parsed unkhown data from server'
+                    )
 
             if not operation_class:
                 operation_class = Unkhown
@@ -42,13 +47,12 @@ class Registery:
             self.add_operation(operation)
 
         else:
-            raise ValueError('Unable to parse the operation to dict -> got None')
+            raise AMIException.ClntSide.InvalidOperation(
+                'Unable to parse the operation to dict -> got None'
+                )
 
 
     def add_operation(self, operation: Action|Event|Response|Unkhown) -> None:
-        print(operation._dict)
-        print()
-
         if hasattr(operation, 'action'):
             self.action_id += 1
             operation._list_id = self.action_id
@@ -65,20 +69,31 @@ class Registery:
             self.responses[self.response_id] = operation
 
         else:
-            raise ValueError(f'operation must be an instance of Operation subclasses')
+            raise AMIException.ClntSide.OperationError(
+                'operation must be an instance of Operation subclasses'
+                )
 
 
     def get_response(self,*, response_id: int=None, action_id: int=None) -> Response | None:
         if response_id:
-            return self.responses.get(response_id)
+            res = self.responses.get(response_id)
 
         elif action_id:
-            for response in self.responses.values():
-                if response.action_id == action_id:
-                    return response
+            for res in self.responses.values():
+                if res.action_id == action_id:
+                    response = res
 
         else:
-            raise ValueError('Provide response_id or action_id')
+            raise AMIException.ClntSide.ResponseError('Provide response_id or action_id')
+
+        if response:
+            return response
+        
+        else:
+            raise AMIException.SrvrSide.ResponseTimeout(
+                f'No response from server'
+            )
+
 
     def remove_response(self, response: Response):
         if response._list_id in self.responses:
