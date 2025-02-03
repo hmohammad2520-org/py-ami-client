@@ -74,28 +74,23 @@ class Registry:
                 )
 
 
-    def get_response(self,*, response_id: int=None, action_id: int=None) -> Response | None:
+    def get_response(self,*, response_id: int=None, action_id: int=None) -> Response|None:
+        response = None
+
         if response_id:
-            res = self.responses.get(response_id)
+            response = self.responses.get(response_id)
 
         elif action_id:
             for res in self.responses.values():
                 if res.action_id == action_id:
                     response = res
-
+                    break
         else:
             raise AMIException.ClntSide.ResponseError('Provide response_id or action_id')
 
-        if response:
-            return response
-        
-        else:
-            raise AMIException.SrvrSide.ResponseTimeout(
-                f'No response from server'
-            )
+        return response
 
-
-    def remove_response(self, response: Response):
+    def remove_response(self, response: Response) -> None:
         if response._list_id in self.responses:
             self.responses.pop(response._list_id)
     
