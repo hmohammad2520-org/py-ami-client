@@ -38,6 +38,6 @@ class Login(Action):
 
         super().__init__(Action=self._asterisk_name, **filtered_kwargs)
 
-    def send(self, client) -> Success:
+    def send(self, client, raise_on_no_response=True) -> Success:
         self.response: Success
-        return super().send(client)
+        return super().send(client, raise_on_no_response)
