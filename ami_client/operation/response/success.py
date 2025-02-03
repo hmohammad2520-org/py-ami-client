@@ -9,8 +9,8 @@ class Success(Response):
             **additional_kwargs
     ) -> None:
 
-        self._asterisk_name = 'Login'
-        self._label = 'Login'
+        self._asterisk_name = 'Success'
+        self._label = 'Success'
 
         self.message = Message
 
