@@ -1,7 +1,5 @@
 import time, random
 
-#from ...ami_client import AMIClient
-
 from ...operation.response import Response
 from ...operation._base import Operation
 
@@ -13,8 +11,8 @@ class Action(Operation):
         self.action_id: int = int(ActionID) if ActionID else random.randint(0, 1_000_000)
         super().__init__(Action=Action, ActionID=self.action_id, **kwargs)
 
-    def send(self, client: 'AMIClient') -> Response: # type: ignore
-        action_string = self.convert_to_raw_content(self.dict)
+    def send(self, client) -> Response:
+        action_string = self.convert_to_raw_content(self._dict)
         client.socket.sendall(action_string.encode())
         self.sent = True
 
@@ -23,10 +21,10 @@ class Action(Operation):
             if not client.connected:
                 break
 
-            response = client.handler.get_response(action_id=self.action_id)
+            response = client.registery.get_response(action_id=self.action_id)
             if response:
                 self.response = response
-                client.handler.remove_response(response)
+                client.registery.remove_response(response)
                 return response
 
             #for prevent tight locking

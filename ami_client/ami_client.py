@@ -1,5 +1,5 @@
 import socket, threading
-from .operation_handler import OperationHandler
+from .registery import Registery
 
 DISCONECT_OS_ERROR_MESSAGE =  'An operation was attempted on something that is not a socket'
 
@@ -23,7 +23,7 @@ class AMIClient:
         self.action_id = 0
         self.connected = False
 
-        self.handler: OperationHandler = OperationHandler()
+        self.registery: Registery = Registery()
 
 
     def connect(self) -> None:
@@ -47,7 +47,7 @@ class AMIClient:
                 buffer += data
                 while b'\r\n\r\n' in buffer:
                     raw_operation, buffer = buffer.split(b'\r\n\r\n', 1)
-                    self.handler.handel_operation(raw_operation.decode())
+                    self.registery.register_operation(raw_operation.decode())
 
 
         except OSError as e:
