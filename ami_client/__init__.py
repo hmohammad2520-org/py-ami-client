@@ -1,5 +1,5 @@
 from .ami_client import AMIClient
-from .registery import Registry
+from .registry import Registry
 from .__version__ import __version__ as version
 
 __all__ = [

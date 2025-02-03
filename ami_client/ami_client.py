@@ -1,5 +1,5 @@
 import socket, threading
-from .registery import Registry
+from .registry import Registry
 
 DISCONECT_OS_ERROR_MESSAGE =  'An operation was attempted on something that is not a socket'
 
@@ -20,8 +20,8 @@ class AMIClient:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(self.timeout)
 
-        self.action_id = 0
-        self.connected = False
+        self.action_id: int = 0
+        self.connected: bool = False
 
         self.registery: Registry = Registry()
 
