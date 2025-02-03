@@ -1,5 +1,7 @@
 from typing import Literal, Union
 
+from ..response.success import Success
+
 from ._base import Action
 
 class Login(Action):
@@ -14,8 +16,8 @@ class Login(Action):
             **additional_kwargs
     ) -> None:
 
-        self.asterisk_name = 'Login'
-        self.label = 'Login'
+        self._asterisk_name = 'Login'
+        self._label = 'Login'
 
         self.username = Username
         self.secret = Secret
@@ -34,4 +36,7 @@ class Login(Action):
         kwargs.update(additional_kwargs)
         filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        super().__init__(Action=self.asterisk_name, **filtered_kwargs)
+        super().__init__(Action=self._asterisk_name, **filtered_kwargs)
+
+    def send(self, client) -> Success:
+        return super().send(client)

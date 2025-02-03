@@ -23,8 +23,8 @@ class Hangup(Event):
             **additional_kwargs
     ) -> None:
 
-        self.asterisk_name = 'Hangup'
-        self.label = 'Hangup'
+        self._asterisk_name = 'Hangup'
+        self._label = 'Hangup'
 
         self.event = Event
         self.channel = Channel

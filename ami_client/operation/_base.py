@@ -4,16 +4,33 @@ import time
 ASTERISK_BANNER: str = 'Asterisk Call Manager'
 
 class Operation:
-    def __init__(self, **kwargs):
-        self.list_id: int = None
-        self.raw: str = ''
-        self.dict: Dict[str, Any] = {}
-        self.asterisk_name: str = ''
-        self.label: str = ''
-        self.timestamp: float = time.time()
+    _asterisk_name: str = ''
+    _label: str = ''
 
-        self.dict.update(kwargs)
-        self.raw = self.convert_to_raw_content(self.dict)
+    def __init__(self, **kwargs):
+        self._name = None
+        self._list_id: int = None
+        self._raw: str = ''
+        self._dict: Dict[str, Any] = {}
+
+        self._timestamp: float = time.time()
+
+        self._dict.update(kwargs)
+        self._raw = self.convert_to_raw_content(self._dict)
+        self._init_name()
+
+    def _init_name(self) -> None:
+        if hasattr(self, 'action'):
+            self._name = self.action
+        
+        elif hasattr(self, 'event'):
+            self._name = self.event
+        
+        elif hasattr(self, 'response'):
+            self._name = self.response
+        
+        else:
+            raise 'Operation must have one of this attributes: action, event, response'
 
     @staticmethod
     def parse_raw_content(raw: str) -> Dict[str, Any]:
@@ -37,7 +54,7 @@ class Operation:
         return raw_operation
 
     def __str__(self) -> str:
-        return f'<Operation: {self.asterisk_name}>'
+        return f'<Operation: {self._asterisk_name}>'
 
     def __repr__(self) -> str:
-        return f'<Operation: {self.asterisk_name}>'
+        return f'<Operation: {self._asterisk_name}>'
