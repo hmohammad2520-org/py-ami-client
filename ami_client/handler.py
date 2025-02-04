@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Iterable, Tuple, Type, Callable, Union
 from functools import wraps
 
-HANDLER_CALLABLE = Callable[[object, 'Handler'], None]
+HandlerCallable = Callable[[object], None]
 
 class Handler:
     # Dictionary to store handlers for each (class, method) pair
@@ -10,7 +10,9 @@ class Handler:
     def __init__(
             self, 
             targets: Union[Type, Iterable[Type]], 
-            handler_function: HANDLER_CALLABLE,
+            handler_function: HandlerCallable,
+            handler_args: tuple = (),
+            handler_kwargs: dict = {},
             *,
             target_method: str = '__init__',
             active: bool = True,
@@ -21,6 +23,8 @@ class Handler:
 
         self._targets = list(targets)
         self._handler_function = handler_function
+        self._handler_args = handler_args
+        self._handler_kwargs = handler_kwargs
         self._target_method = target_method
         self._active = active
 
@@ -58,7 +62,7 @@ class Handler:
             key = (target, method_name)
             for handler in Handler._class_method_handlers.get(key, []):
                 if handler._active:
-                    handler._handler_function(instance, handler)
+                    handler._handler_function(instance, *self._handler_args, **self._handler_kwargs)
 
             return output
 
@@ -87,9 +91,10 @@ class Handler:
                         delattr(target, original_name)
                     del self._class_method_handlers[key]
 
+
     def __str__(self) -> str:
         return f'<Handler of: {self._targets} (method={self._target_method})>'
 
     def __repr__(self) -> str:
-        return f'Handler({self._targets}, {self._handler_function}, active={self._active}, target_method={self._target_method})'
+        return f'Handler({self._targets}, {self._handler_function}, active={self._active}, target_method={self._target_method}, handler_args={self._handler_args}, handler_kwargs={self._handler_kwargs})'
 
