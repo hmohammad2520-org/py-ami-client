@@ -2,6 +2,9 @@ from typing import Type
 from ._base import Event
 
 from .hangup import Hangup
+from .newexten import NewExten
+from .varset import VarSet
+
 
 event_map: dict[str, Type[Event]] = {
     'AGIExecEnd': None, #NotImplementedYet
@@ -128,7 +131,7 @@ event_map: dict[str, Type[Event]] = {
     'NewAccountCode': None, #NotImplementedYet
     'NewCallerid': None, #NotImplementedYet
     'NewConnectedLine': None, #NotImplementedYet
-    'NewExten': None, #NotImplementedYet
+    'NewExten': NewExten,
     'Newchannel': None, #NotImplementedYet
     'Newstate': None, #NotImplementedYet
     'OriginateResponse': None, #NotImplementedYet
@@ -176,7 +179,7 @@ event_map: dict[str, Type[Event]] = {
     'Unhold': None, #NotImplementedYet
     'Unload': None, #NotImplementedYet
     'UserEvent': None, #NotImplementedYet
-    'VarSet': None, #NotImplementedYet
+    'VarSet': VarSet,
     'VoicemailPasswordChange': None, #NotImplementedYet
     'Wink': None, #NotImplementedYet
 }
@@ -187,4 +190,6 @@ __all__ = [
     'event_map',
 
     'Hangup',
+    'NewExten',
+    'VarSet',
 ]
