@@ -21,10 +21,10 @@ class Action(Operation):
             if not client.connected:
                 break
 
-            response = client.registery.get_response(action_id=self.action_id)
+            response = client.registry.get_response(action_id=self.action_id)
             if response:
                 self.response = response
-                client.registery.remove_response(response)
+                client.registry.remove_response(response)
                 return response
 
             #for prevent tight locking

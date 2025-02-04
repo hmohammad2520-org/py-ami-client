@@ -66,20 +66,20 @@ class AMIClient:
 
     def add_whitelist(self, items: List[Type]) -> None:
         for item in items:
-            self.registry.white_list.add(item)
+            self.registry.whitelist.add(item)
 
     def add_blacklist(self, items: List[Type]) -> None:
         for item in items:
-            self.registry.black_list.add(item)
+            self.registry.blacklist.add(item)
 
 
     def remove_whitelist(self, items: List[Type]) -> None:
         for item in items:
-            self.registry.white_list.remove(item)
+            self.registry.whitelist.remove(item)
 
     def remove_blacklist(self, items: List[Type]) -> None:
         for item in items:
-            self.registry.white_list.remove(item)
+            self.registry.whitelist.remove(item)
 
 
     def __enter__(self) -> None:

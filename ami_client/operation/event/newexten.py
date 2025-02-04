@@ -1,6 +1,6 @@
 from ._base import Event
 
-class NewExten(Event):
+class Newexten(Event):
     def __init__(
             self, *,
             Event: str = None,
@@ -24,7 +24,7 @@ class NewExten(Event):
             **additional_kwargs
     ) -> None:
 
-        self._asterisk_name = 'NewExten'
+        self._asterisk_name = 'Newexten'
         self._label = 'New Extension'
 
         self.event = Event
