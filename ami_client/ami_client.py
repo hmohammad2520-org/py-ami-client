@@ -3,7 +3,7 @@ from typing import List, Type
 
 from .registry import Registry
 
-DISCONECT_OS_ERROR_MESSAGE =  'An operation was attempted on something that is not a socket'
+DISCONNECT_OS_ERROR_MESSAGE  =  'An operation was attempted on something that is not a socket'
 
 class AMIClient:
     def __init__(
@@ -19,19 +19,17 @@ class AMIClient:
         self.timeout = timeout
         self.socket_buffer = socket_buffer
 
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.settimeout(self.timeout)
-
-        self.action_id: int = 0
-        self.connected: bool = False
-
         self.registry: Registry = Registry()
 
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.settimeout(self.timeout)
+        self.thread = threading.Thread(target=self.listen, daemon=True)
+
+        self.connected: bool = False
 
     def connect(self) -> None:
         self.connected = True
         self.socket.connect((self.host, self.port))
-        self.thread = threading.Thread(target=self.listen, daemon=True)
         self.thread.start()
 
     def disconnect(self) -> None:
@@ -53,7 +51,7 @@ class AMIClient:
 
 
         except OSError as e:
-            if not DISCONECT_OS_ERROR_MESSAGE in str(e): 
+            if DISCONNECT_OS_ERROR_MESSAGE not in str(e): 
                 self.connected = False
                 self.socket.close()
                 raise e
