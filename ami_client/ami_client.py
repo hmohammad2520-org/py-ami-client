@@ -1,4 +1,6 @@
 import socket, threading
+from typing import List, Type
+
 from .registry import Registry
 
 DISCONECT_OS_ERROR_MESSAGE =  'An operation was attempted on something that is not a socket'
@@ -23,7 +25,7 @@ class AMIClient:
         self.action_id: int = 0
         self.connected: bool = False
 
-        self.registery: Registry = Registry()
+        self.registry: Registry = Registry()
 
 
     def connect(self) -> None:
@@ -47,7 +49,7 @@ class AMIClient:
                 buffer += data
                 while b'\r\n\r\n' in buffer:
                     raw_operation, buffer = buffer.split(b'\r\n\r\n', 1)
-                    self.registery.register_operation(raw_operation.decode())
+                    self.registry.register_operation(raw_operation.decode())
 
 
         except OSError as e:
@@ -60,6 +62,24 @@ class AMIClient:
             self.connected = False
             self.socket.close()
             raise e
+
+
+    def add_whitelist(self, items: List[Type]) -> None:
+        for item in items:
+            self.registry.white_list.add(item)
+
+    def add_blacklist(self, items: List[Type]) -> None:
+        for item in items:
+            self.registry.black_list.add(item)
+
+
+    def remove_whitelist(self, items: List[Type]) -> None:
+        for item in items:
+            self.registry.white_list.remove(item)
+
+    def remove_blacklist(self, items: List[Type]) -> None:
+        for item in items:
+            self.registry.white_list.remove(item)
 
 
     def __enter__(self) -> None:

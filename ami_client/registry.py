@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Set, Type
 
 from .exeptions import AMIException
 
@@ -19,8 +19,8 @@ class Registry:
 
         self.channels: Dict[str, Channel] = {}
 
-        self.white_list: List[str] = []
-        self.black_list: List[str] = []
+        self.white_list: Set[Type] = []
+        self.black_list: Set[Type] = []
 
     def register_operation(self, raw_operation: str) -> None:
         operation_dict = Operation.parse_raw_content(raw_operation)
@@ -41,6 +41,14 @@ class Registry:
 
             if not operation_class:
                 operation_class = Unkhown
+
+            if self.white_list:
+                for cls in self.white_list:
+                    if not issubclass(operation_class, cls) or operation_class == cls: return
+
+            if self.black_list:
+                for cls in self.black_list:
+                    if issubclass(operation_class, cls) or operation_class == cls: return
 
             operation = operation_class(**operation_dict)
             self.init_channel(operation)
