@@ -1,5 +1,5 @@
 import socket, threading
-from typing import List, Type
+from typing import List, Self, Type
 
 from .registry import Registry
 
@@ -80,8 +80,9 @@ class AMIClient:
             self.registry.whitelist.remove(item)
 
 
-    def __enter__(self) -> None:
+    def __enter__(self) -> Self:
         self.connect()
+        return self
     
     def __exit__(self, type, value, traceback) -> None:
         self.disconnect()
