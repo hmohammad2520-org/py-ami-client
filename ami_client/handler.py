@@ -97,4 +97,3 @@ class Handler:
 
     def __repr__(self) -> str:
         return f'Handler({self._targets}, {self._handler_function}, active={self._active}, target_method={self._target_method}, handler_args={self._handler_args}, handler_kwargs={self._handler_kwargs})'
-
