@@ -19,8 +19,8 @@ class Registry:
 
         self.channels: Dict[str, Channel] = {}
 
-        self.white_list: Set[Type] = []
-        self.black_list: Set[Type] = []
+        self.white_list: Set[Type] = {}
+        self.black_list: Set[Type] = {}
 
     def register_operation(self, raw_operation: str) -> None:
         operation_dict = Operation.parse_raw_content(raw_operation)
