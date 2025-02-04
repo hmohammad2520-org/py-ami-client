@@ -83,6 +83,6 @@ class AMIClient:
     def __enter__(self) -> Self:
         self.connect()
         return self
-    
+
     def __exit__(self, type, value, traceback) -> None:
         self.disconnect()
