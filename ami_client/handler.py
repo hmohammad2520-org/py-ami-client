@@ -5,7 +5,7 @@ HandlerCallable = Callable[[object], None]
 
 class Handler:
     # Dictionary to store handlers for each (class, method) pair
-    _class_method_handlers: Dict[Tuple[Type, str], List['Handler']] = {}
+    class_method_handlers: Dict[Tuple[Type, str], List['Handler']] = {}
 
     def __init__(
             self, 
@@ -31,10 +31,10 @@ class Handler:
         # Add this handler to the list of handlers for each (class, method)
         for target in self._targets:
             key = (target, self._target_method)
-            if key not in self._class_method_handlers:
-                self._class_method_handlers[key] = []
+            if key not in self.class_method_handlers:
+                self.class_method_handlers[key] = []
                 self._wrap_class_method(target, self._target_method)
-            self._class_method_handlers[key].append(self)
+            self.class_method_handlers[key].append(self)
 
     def _create_original_name(self, method_name: str) -> str:
         return f'__original_{method_name}'
@@ -60,7 +60,7 @@ class Handler:
 
             # Call all active handlers for this (class, method)
             key = (target, method_name)
-            for handler in Handler._class_method_handlers.get(key, []):
+            for handler in Handler.class_method_handlers.get(key, []):
                 if handler._active:
                     handler._handler_function(instance, *self._handler_args, **self._handler_kwargs)
 
@@ -81,15 +81,15 @@ class Handler:
         """Remove the handler and restore the original method if no handlers are left."""
         for target in self._targets:
             key = (target, self._target_method)
-            if key in self._class_method_handlers:
-                self._class_method_handlers[key].remove(self)
-                if not self._class_method_handlers[key]:  # No handlers left
+            if key in self.class_method_handlers:
+                self.class_method_handlers[key].remove(self)
+                if not self.class_method_handlers[key]:  # No handlers left
                     # Restore the original method
                     original_name = self._create_original_name(self._target_method)
                     if hasattr(target, original_name):
                         setattr(target, self._target_method, getattr(target, original_name))
                         delattr(target, original_name)
-                    del self._class_method_handlers[key]
+                    del self.class_method_handlers[key]
 
 
     def __str__(self) -> str:
