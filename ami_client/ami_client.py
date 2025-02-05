@@ -51,6 +51,7 @@ class AMIClient:
 
 
         except OSError as e:
+            # This Exception raised when socket connection is closed
             if DISCONNECT_OS_ERROR_MESSAGE not in str(e): 
                 self.connected = False
                 self.socket.close()
