@@ -3,6 +3,7 @@ from ._base import Action
 
 from .login import Login
 from .logoff import Logoff
+from .originate import Originate
 from .ping import Ping
 
 action_map: dict[str, Type[Action]] = {
@@ -93,7 +94,7 @@ action_map: dict[str, Type[Action]] = {
     'ModuleCheck': None, # NotImplementedYet
     'ModuleLoad': None, # NotImplementedYet
     'MuteAudio': None, # NotImplementedYet
-    'Originate': None, # NotImplementedYet
+    'Originate': Originate,
     'PJSIPHangup': None, # NotImplementedYet
     'PJSIPNotify': None, # NotImplementedYet
     'PJSIPQualify': None, # NotImplementedYet
