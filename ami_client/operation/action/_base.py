@@ -5,6 +5,7 @@ from ...operation.response import Response
 from ...operation._base import Operation
 
 class Action(Operation):
+    from ami_client import AMIClient
     def __init__(self, Action: str ,ActionID: Optional[int] = None, **kwargs) -> None:
         self.sent: bool = False
         self.response: Response|None = None
@@ -12,7 +13,7 @@ class Action(Operation):
         self.action_id: int = int(ActionID) if ActionID else random.randint(0, 1_000_000_000)
         super().__init__(Action=Action, ActionID=self.action_id, **kwargs)
 
-    def send(self, client: 'AMIClient', raise_on_no_response: bool = True) -> Response|None: # type: ignore
+    def send(self, client: AMIClient, raise_on_no_response: bool = True) -> Response|None: # type: ignore
         action_string = self.convert_to_raw_content(self._dict)
         client.socket.sendall(action_string.encode())
         self.sent = True
