@@ -20,14 +20,13 @@ class AMIClient:
         self.socket_buffer = socket_buffer
 
         self.registry: Registry = Registry()
+        self.connected: bool = False
 
+    def connect(self) -> None:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(self.timeout)
         self.thread = threading.Thread(target=self.listen, daemon=True)
 
-        self.connected: bool = False
-
-    def connect(self) -> None:
         self.connected = True
         self.socket.connect((self.host, self.port))
         self.thread.start()

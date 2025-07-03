@@ -1,26 +1,27 @@
+from typing import Optional
 from ._base import Event
 
 class Newexten(Event):
     def __init__(
             self, *,
-            Event: str = None,
-            Channel: str = None,
-            ChannelState: str = None,
-            ChannelStateDesc: str = None,
-            CallerIDNum: str = None,
-            CallerIDName: str = None,
-            ConnectedLineNum: str = None,
-            ConnectedLineName: str = None,
-            Language: str = None,
-            AccountCode: str = None,
-            Context: str = None,
-            Exten: str = None,
-            Priority: str = None,
-            Uniqueid: str = None,
-            Linkedid: str = None,
-            Extension: str = None,
-            Application: str = None,
-            AppData: str = None,
+            Event: Optional[str] = None,
+            Channel: Optional[str] = None,
+            ChannelState: Optional[str] = None,
+            ChannelStateDesc: Optional[str] = None,
+            CallerIDNum: Optional[str] = None,
+            CallerIDName: Optional[str] = None,
+            ConnectedLineNum: Optional[str] = None,
+            ConnectedLineName: Optional[str] = None,
+            Language: Optional[str] = None,
+            AccountCode: Optional[str] = None,
+            Context: Optional[str] = None,
+            Exten: Optional[str] = None,
+            Priority: Optional[str] = None,
+            Uniqueid: Optional[str] = None,
+            Linkedid: Optional[str] = None,
+            Extension: Optional[str] = None,
+            Application: Optional[str] = None,
+            AppData: Optional[str] = None,
             **additional_kwargs
     ) -> None:
 

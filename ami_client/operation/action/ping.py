@@ -1,9 +1,10 @@
+from typing import Optional
 from ._base import Action
 
 class Ping(Action):
     def __init__(
             self,*,
-            ActionID: int|str = None,
+            ActionID: Optional[int] = None,
             **additional_kwargs,
     ) -> None:
 

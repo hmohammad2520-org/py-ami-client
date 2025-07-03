@@ -1,14 +1,15 @@
 import time, random
+from typing import Optional
 
 from ...operation.response import Response
 from ...operation._base import Operation
 
 class Action(Operation):
-    def __init__(self, Action: str ,ActionID: int = None, **kwargs) -> None:
-        self.sent: bool = None
-        self.response: Response = None
+    def __init__(self, Action: str ,ActionID: Optional[int] = None, **kwargs) -> None:
+        self.sent: bool = False
+        self.response: Response|None = None
         self.action = Action
-        self.action_id: int = int(ActionID) if ActionID else random.randint(0, 1_000_000)
+        self.action_id: int = int(ActionID) if ActionID else random.randint(0, 1_000_000_000)
         super().__init__(Action=Action, ActionID=self.action_id, **kwargs)
 
     def send(self, client: 'AMIClient', raise_on_no_response: bool = True) -> Response|None: # type: ignore

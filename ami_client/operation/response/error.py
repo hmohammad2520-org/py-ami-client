@@ -1,11 +1,12 @@
+from typing import Optional
 from ._base import Response
 
 class Error(Response):
     def __init__(
             self,*,
             Response: str,
-            ActionID: int|str = None,
-            Message: str = None,
+            ActionID: Optional[int] = None,
+            Message: Optional[str] = None,
             **additional_kwargs
     ) -> None:
 

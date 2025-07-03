@@ -1,25 +1,26 @@
+from typing import Optional
 from ._base import Action
 
 class Originate(Action):
     def __init__(
             self,*,
-            ActionID: int|str = None,
-            Channel: str = None,
-            Exten: str = None,
-            Context: str = None,
-            Priority: str = None,
-            Application: str = None,
-            Data: str = None,
-            Timeout: str = None,
-            CallerID: str = None,
-            Variable: str = None,
-            Account: str = None,
-            EarlyMedia: str = None,
-            Async: str = None,
-            Codecs: str = None,
-            ChannelId: str = None,
-            OtherChannelId: str = None,
-            PreDialGoSub: str = None,
+            ActionID: Optional[int] = None,
+            Channel: Optional[str] = None,
+            Exten: Optional[str] = None,
+            Context: Optional[str] = None,
+            Priority: Optional[str] = None,
+            Application: Optional[str] = None,
+            Data: Optional[str] = None,
+            Timeout: Optional[str] = None,
+            CallerID: Optional[str] = None,
+            Variable: Optional[str] = None,
+            Account: Optional[str] = None,
+            EarlyMedia: Optional[str] = None,
+            Async: Optional[str] = None,
+            Codecs: Optional[str] = None,
+            ChannelId: Optional[str] = None,
+            OtherChannelId: Optional[str] = None,
+            PreDialGoSub: Optional[str] = None,
             **additional_kwargs
     ) -> None:
 
