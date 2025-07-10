@@ -1,26 +1,25 @@
 import socket, threading
 from typing import List, Self, Type
 
-from .registry import Registry
-
 DISCONNECT_OS_ERROR_MESSAGE  =  'An operation was attempted on something that is not a socket'
 
 class AMIClient:
     def __init__(
-            self,*,
+            self,
             host: str = '127.0.0.1',
             port: int = 5038,
             timeout: int = 10,
             socket_buffer: int = 2048,
-            ) -> None:
+        ) -> None:
 
         self.host = host
         self.port = port
         self.timeout = timeout
         self.socket_buffer = socket_buffer
 
-        self.registry: Registry = Registry()
-        self.connected: bool = False
+        from ._registry import Registry
+        self.registry = Registry()
+        self.connected = False
 
     def connect(self) -> None:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,11 +45,10 @@ class AMIClient:
                 buffer += data
                 while b'\r\n\r\n' in buffer:
                     raw_operation, buffer = buffer.split(b'\r\n\r\n', 1)
-                    self.registry.register_operation(raw_operation.decode())
-
+                    self.registry._register_new_operation(raw_operation.decode())
 
         except OSError as e:
-            # This Exception raised when socket connection is closed
+            ## This Error message is excepted sometimes and this line prevents random crashes
             if DISCONNECT_OS_ERROR_MESSAGE not in str(e): 
                 self.connected = False
                 self.socket.close()

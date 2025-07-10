@@ -6,7 +6,7 @@ from .newexten import Newexten
 from .varset import VarSet
 
 
-event_map: dict[str, Type|None] = {
+event_map: dict[str, Type[Event] | None] = {
     'AGIExecEnd': None, #NotImplementedYet
     'AGIExecStart': None, #NotImplementedYet
     'AOC-D': None, #NotImplementedYet

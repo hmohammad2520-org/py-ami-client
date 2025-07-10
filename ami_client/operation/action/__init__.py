@@ -6,7 +6,7 @@ from .logoff import Logoff
 from .originate import Originate
 from .ping import Ping
 
-action_map: dict[str, Type|None] = {
+action_map: dict[str, Type[Action] | None] = {
     'AGI': None, # NotImplementedYet
     'AOCMessage': None, # NotImplementedYet
     'AbsoluteTimeout': None, # NotImplementedYet

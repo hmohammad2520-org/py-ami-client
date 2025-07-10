@@ -7,9 +7,13 @@ class Operation:
     _asterisk_name: str = ''
     _label: str = ''
 
-    def __init__(self, **kwargs):
-        self._name = None
-        self._list_id: int = None
+    action: str | None
+    event: str | None
+    response: str | None
+
+    def __init__(self, **kwargs: Any):
+        self._name: str | None = None
+        self._list_id: int | None = None
         self._raw: str = ''
         self._dict: Dict[str, Any] = {}
 
@@ -17,9 +21,7 @@ class Operation:
 
         self._dict.update(kwargs)
         self._raw = self.convert_to_raw_content(self._dict)
-        self._init_name()
 
-    def _init_name(self) -> None:
         if hasattr(self, 'action'):
             self._name = self.action
         
@@ -30,7 +32,7 @@ class Operation:
             self._name = self.response
         
         else:
-            raise 'Operation must have one of this attributes: action, event, response'
+            raise AttributeError('Operation must have one of this attributes: action, event, response')
 
     @staticmethod
     def parse_raw_content(raw: str) -> Dict[str, Any]:

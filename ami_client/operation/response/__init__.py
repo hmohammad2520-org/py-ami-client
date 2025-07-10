@@ -4,7 +4,7 @@ from ._base import Response
 from .error import Error
 from .success import Success
 
-response_map: dict[str, Type[Response]] = {
+response_map: dict[str, Type[Response] | None] = {
     'Error': Error,
     'Success': Success,
 }
