@@ -1,9 +1,9 @@
 from typing import Type
 from ._base import Event
 
-from .hangup import Hangup
-from .newexten import Newexten
-from .varset import VarSet
+from ._hangup import Hangup
+from ._newexten import Newexten
+from ._varset import VarSet
 
 
 event_map: dict[str, Type[Event] | None] = {

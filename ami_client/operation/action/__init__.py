@@ -1,10 +1,10 @@
 from typing import Type
 from ._base import Action
 
-from .login import Login
-from .logoff import Logoff
-from .originate import Originate
-from .ping import Ping
+from ._login import Login
+from ._logoff import Logoff
+from ._originate import Originate
+from ._ping import Ping
 
 action_map: dict[str, Type[Action] | None] = {
     'AGI': None, # NotImplementedYet

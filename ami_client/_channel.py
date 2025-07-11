@@ -1,6 +1,6 @@
 import time
-from typing import Any, Dict, List
-
+from collections import deque
+from typing import Any, Dict, Deque
 from ._exeptions import AMIExceptions
 from .operation import Action, Event, Response, UnkhownOP
 
@@ -11,9 +11,9 @@ class Channel:
         self.timestamp: float = time.time()
         self.dict: Dict[str, Any] = kwargs
 
-        self.actions: List[Action | UnkhownOP] = []
-        self.events: List[Event | UnkhownOP] = []
-        self.responses: List[Response | UnkhownOP] = []
+        self.actions: Deque[Action | UnkhownOP] = deque(maxlen=1000)
+        self.events: Deque[Event | UnkhownOP] = deque(maxlen=1000)
+        self.responses: Deque[Response | UnkhownOP] = deque(maxlen=1000)
 
     def add_operation(self, operation) -> None:
         if isinstance(operation, Action) or hasattr(operation, 'action'):
@@ -26,6 +26,6 @@ class Channel:
             self.responses.append(operation)
 
         else:
-            raise AMIExceptions.ClntSide.OperationError(
+            raise AMIExceptions.ClientError.OperationError(
                 'operation must be an instance of Operation subclasses'
                 )

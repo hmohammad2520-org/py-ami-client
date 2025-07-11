@@ -29,7 +29,7 @@ class Registry:
                 operation_class = response_map.get(operation_dict['Response'])
 
             else:
-                raise AMIExceptions.ClntSide.UnknownOperation(
+                raise AMIExceptions.ClientError.UnknownOperation(
                     'Parsed unkhown data from server'
                 )
 
@@ -49,7 +49,7 @@ class Registry:
             self._add_operation(operation)
 
         else:
-            raise AMIExceptions.ClntSide.InvalidOperation(
+            raise AMIExceptions.ClientError.InvalidOperation(
                 'Unable to parse the operation to dict -> got None'
             )
 
@@ -65,19 +65,15 @@ class Registry:
             self.responses.append(operation)
 
         else:
-            raise AMIExceptions.ClntSide.OperationError(
+            raise AMIExceptions.ClientError.OperationError(
                 'operation must be an instance of Operation subclasses'
                 )
 
 
     def get_response(self, action_id: int) -> Response|None:
-        server_response = None
-        for response in self.responses:
-            if int(response.action_id) == int(action_id):
-                server_response = response
-                break
-
-        return server_response
+        for response in reversed(self.responses):
+            if response.action_id == action_id:
+                return response
 
     def init_channel(self, operation: Operation) -> None:
         raise NotImplementedError

@@ -1,8 +1,8 @@
 from typing import Type
 from ._base import Response
 
-from .error import Error
-from .success import Success
+from ._error import Error
+from ._success import Success
 
 response_map: dict[str, Type[Response] | None] = {
     'Error': Error,

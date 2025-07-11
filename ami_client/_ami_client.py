@@ -1,5 +1,7 @@
 import socket, threading
-from typing import List, Self, Type
+from typing import List, Literal, Optional, Self, Type, Union, cast
+
+from ._exeptions import AMIExceptions
 
 DISCONNECT_OS_ERROR_MESSAGE  =  'An operation was attempted on something that is not a socket'
 
@@ -8,26 +10,38 @@ class AMIClient:
             self,
             host: str = '127.0.0.1',
             port: int = 5038,
+            Username: Optional[str] = None,
+            Secret: Optional[str] = None,
+            AuthType: Optional[Literal['plain', 'MD5']] = None,
+            Key: Optional[str] = None,
+            Events: Optional[Union[Literal['on', 'off'], list[str]]] = None,
             timeout: int = 10,
             socket_buffer: int = 2048,
         ) -> None:
 
-        self.host = host
-        self.port = port
-        self.timeout = timeout
-        self.socket_buffer = socket_buffer
+        self._host = host
+        self._port = port
+        self._username = Username
+        self._secret = Secret
+        self._auth_type = AuthType
+        self._key = Key
+        self._events = Events
+        self._timeout = timeout
+        self._socket_buffer = socket_buffer
+
+        self.connected = False
+        self.authenticated = False
 
         from ._registry import Registry
         self.registry = Registry()
-        self.connected = False
 
     def connect(self) -> None:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.settimeout(self.timeout)
+        self.socket.settimeout(self._timeout)
         self.thread = threading.Thread(target=self.listen, daemon=True)
 
         self.connected = True
-        self.socket.connect((self.host, self.port))
+        self.socket.connect((self._host, self._port))
         self.thread.start()
 
     def disconnect(self) -> None:
@@ -40,7 +54,7 @@ class AMIClient:
         buffer = b''
         try:
             while self.connected:
-                try: data = self.socket.recv(self.socket_buffer)
+                try: data = self.socket.recv(self._socket_buffer)
                 except TimeoutError: continue
                 buffer += data
                 while b'\r\n\r\n' in buffer:
@@ -54,10 +68,38 @@ class AMIClient:
                 self.socket.close()
                 raise e
 
+        # Ignore Operation Errors
+        ## TODO: This is a temporary solution. This will be fixed in logging integration.
+        except AMIExceptions.ClientError.OperationError: ...
+
         except Exception as e:
             self.connected = False
             self.socket.close()
             raise e
+
+    
+    from .operation import Operation, Response
+    def login(self) -> Response:
+        from .operation.action import Login
+        from .operation.response import Success
+        response = Login(
+            Username = self._username,
+            Secret = self._secret,
+            AuthType = cast(Optional[Literal['plain', 'MD5']], self._auth_type),
+            Key = self._key,
+            Events = cast(Optional[Union[Literal['on', 'off'], list[str]]], self._events),
+        ).send(self)
+
+        if isinstance(response, Success):
+            self.authenticated = True
+
+        return response
+
+
+    def logout(self) -> Response | None:
+        from .operation.action import Logoff
+        self.authenticated = False
+        return Logoff().send(self, raise_on_no_response=False)
 
 
     def add_whitelist(self, items: List[Type]) -> None:
