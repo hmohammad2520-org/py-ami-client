@@ -1,6 +1,6 @@
 from ._base import Operation
 
-class UnkhownOP(Operation):
+class UnkhownOperation(Operation):
     def __init__(self, **kwargs: str):        
         self.asterisk_name: str = 'Unkhown'
         self.label: str = 'Unkhown Operation'

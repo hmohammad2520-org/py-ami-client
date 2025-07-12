@@ -1,6 +1,6 @@
 from typing import Set, Type, Deque
 from collections import deque
-from .operation import Operation, Action, Event, Response, UnkhownOP
+from .operation import Operation, Action, Event, Response, UnkhownOperation
 from .operation import action_map, event_map, response_map
 from ._channel import Channel
 from ._exeptions import AMIExceptions
@@ -34,7 +34,7 @@ class Registry:
                 )
 
             if operation_class is None:
-                operation_class = UnkhownOP
+                operation_class = UnkhownOperation
 
             if self.whitelist:
                 for cls in self.whitelist:
