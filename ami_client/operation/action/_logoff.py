@@ -19,3 +19,13 @@ class Logoff(Action):
         filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
         super().__init__(Action=self._asterisk_name, **filtered_kwargs)
+
+    def send(
+            self,
+            client,
+            raise_timeout = False,
+            check_connection = False,
+            check_authentication = False,
+            close_connection = True
+        ) -> Response | None:
+        return super().send(client, raise_timeout, check_connection, check_authentication, close_connection)
