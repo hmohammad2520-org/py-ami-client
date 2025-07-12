@@ -3,5 +3,7 @@
 .__cache__
 .env
 
+test_service.py
+
 /.vscode/
 /.venv/

@@ -2,7 +2,7 @@ import time
 from collections import deque
 from typing import Any, Dict, Deque
 from ._exeptions import AMIExceptions
-from .operation import Action, Event, Response, UnkhownOperation
+from .operation import Action, Event, Response, UnknownOperation
 
 
 class Channel:
@@ -11,9 +11,9 @@ class Channel:
         self.timestamp: float = time.time()
         self.dict: Dict[str, Any] = kwargs
 
-        self.actions: Deque[Action | UnkhownOperation] = deque(maxlen=1000)
-        self.events: Deque[Event | UnkhownOperation] = deque(maxlen=1000)
-        self.responses: Deque[Response | UnkhownOperation] = deque(maxlen=1000)
+        self.actions: Deque[Action | UnknownOperation] = deque(maxlen=1000)
+        self.events: Deque[Event | UnknownOperation] = deque(maxlen=1000)
+        self.responses: Deque[Response | UnknownOperation] = deque(maxlen=1000)
 
     def add_operation(self, operation) -> None:
         if isinstance(operation, Action) or hasattr(operation, 'action'):

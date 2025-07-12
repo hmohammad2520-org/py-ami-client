@@ -55,6 +55,7 @@ class Operation:
         raw_operation += '\r\n'
         return raw_operation
 
+
     def __str__(self) -> str:
         return f'<Operation: {self._asterisk_name}>'
 

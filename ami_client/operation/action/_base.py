@@ -1,6 +1,5 @@
 import time, random
 from typing import Optional
-
 from ...operation.response import Response
 from ...operation._base import Operation
 
@@ -16,23 +15,25 @@ class Action(Operation):
             self,
             client,
             raise_timeout: bool = True,
+            raise_on_error_response: bool = True,
             check_connection: bool = True,
             check_authentication: bool = True,
             close_connection: bool = False,
         ) -> Response | None:
-        if check_connection and not client.connected:
-            client.connect()
+        if check_connection:
+            client.connect() if not client.is_connected() else None
 
-        if check_authentication and not client.authenticated:
-            client.login()
+        if check_authentication:
+            client.login() if not client.is_authenticated() else None
 
         action_string = self.convert_to_raw_content(self._dict)
         client.socket.sendall(action_string.encode())
+        print(action_string)
         self._sent_to_server = True
 
         start = time.time()
-        while client.connected and (time.time() - start) < client._timeout:
-            response = client.registry.get_response(self.action_id)
+        while (time.time() - start) < client._timeout:
+            response: Response | None = client.registry.get_response(self.action_id)
             time.sleep(0.05)  # to prevent tight locking
 
         else:
@@ -40,11 +41,15 @@ class Action(Operation):
                 raise TimeoutError(
                     f'Timeout while getting response. action: {self.action} - action id: {self.action_id}'
                 )
-        
+
         if close_connection:
             client.disconnect()
-        
+
         self.server_response = response
+
+        if response and raise_on_error_response:
+            response.raise_on_status()
+
         return response
 
 

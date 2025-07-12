@@ -38,5 +38,13 @@ class Login(Action):
 
         super().__init__(Action=self._asterisk_name, **filtered_kwargs)
 
-    def send(self, client, raise_timeout: bool = True, check_connection: bool = True, check_authentication: bool = False) -> Response | None:
-        return super().send(client, raise_timeout, check_connection, check_authentication)
+    def send(
+            self,
+            client,
+            raise_timeout = True,
+            raise_on_error_response = True,
+            check_connection = False,
+            check_authentication = False,
+            close_connection = False,
+        ) -> Response | None:
+        return super().send(client, raise_timeout, raise_on_error_response, check_connection, check_authentication, close_connection)

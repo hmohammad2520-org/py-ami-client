@@ -2,7 +2,7 @@ from ._base import Operation
 from .action import Action, action_map
 from .event import Event, event_map
 from .response import Response, response_map
-from .unkhown_operation import UnkhownOperation
+from .unkhown_operation import UnknownOperation
 
 __all__ = [
     'Operation',
@@ -15,5 +15,5 @@ __all__ = [
     'event_map',
     'response_map',
 
-    'UnkhownOperation',
+    'UnknownOperation',
 ]

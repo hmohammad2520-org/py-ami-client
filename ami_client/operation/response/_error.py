@@ -8,7 +8,7 @@ class Error(Response):
             ActionID: Optional[int] = None,
             Message: Optional[str] = None,
             **additional_kwargs
-    ) -> None:
+        ) -> None:
 
         self._asterisk_name = 'Error'
         self._label = 'Error'

@@ -1,6 +1,6 @@
 import socket, threading
+from classmods import return_false_on_error
 from typing import List, Literal, Optional, Self, Type, Union, cast
-
 from ._exeptions import AMIExceptions
 
 EXCEPTED_OS_ERROR  =  'An operation was attempted on something that is not a socket'
@@ -31,39 +31,35 @@ class AMIClient:
         self._timeout = timeout
         self._socket_buffer = socket_buffer
 
-        self.connected = False
-        self.authenticated = False
-
         from ._registry import Registry
         self.registry = Registry()
 
 
     def connect(self) -> None:
-        if not self.connected:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.settimeout(self._timeout)
-            self.listen_thread = threading.Thread(target=self.listen_loop, daemon=True)
 
-            self.connected = True
-            self.socket.connect((self._host, self._port))
-            self.listen_thread.start()
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.settimeout(self._timeout)
+        self.listen_thread = threading.Thread(target=self.listen_loop, daemon=True)
+
+        self.socket.connect((self._host, self._port))
+        self.listen_thread.start()
 
     def disconnect(self) -> None:
-        if self.authenticated:
+        if self.is_authenticated():
             self.logout()
 
-        if self.connected:
-            self.connected = False
-            if not threading.current_thread() == self.listen_thread:
-                self.listen_thread.join()
+        if not threading.current_thread() == self.listen_thread:
+            self.listen_thread.join()
 
-            self.socket.close()
+        self.socket.close()
 
     def listen_loop(self) -> None:
         buffer = b''
 
-        while self.connected:
-            try: data = self.socket.recv(self._socket_buffer)
+        while self.is_connected():
+            try: 
+                data = self.socket.recv(self._socket_buffer)
+                print(data)
             ## This error excepted if no event triggers in server for `self._timeout` amount of time.
             except TimeoutError: continue
             except OSError as e:
@@ -90,7 +86,6 @@ class AMIClient:
     def login(self) -> Response:
         from .operation import Response
         from .operation.action import Login
-        from .operation.response import Success
 
         response = Login(
             Username = self._username,
@@ -100,13 +95,25 @@ class AMIClient:
             Events = cast(Optional[Union[Literal['on', 'off'], list[str]]], self._events),
         ).send(self)
 
-        self.authenticated = True if isinstance(response, Success) else False
         return cast(Response, response)
 
     def logout(self) -> Response | None:
-        from .operation.action import Logoff
-        self.authenticated = False
-        return Logoff().send(self)
+        if not self.is_authenticated():
+            from .operation.action import Logoff
+            return Logoff().send(self)
+
+
+    # @return_false_on_error
+    def is_connected(self) -> bool:
+        if hasattr(socket, 'MSG_DONTWAIT'): self.socket.send(b'', socket.MSG_DONTWAIT)  # type: ignore
+        else: self.socket.send(b'')
+        return True
+
+    @return_false_on_error
+    def is_authenticated(self) -> bool:
+        from .operation.action import Ping
+        Ping().send(self, check_connection=True, check_authentication=False)
+        return True
 
 
     def add_whitelist(self, items: List[Type]) -> None:
@@ -129,7 +136,9 @@ class AMIClient:
 
     def __enter__(self) -> Self:
         self.connect()
+        self.login()
         return self
 
     def __exit__(self, type, value, traceback) -> None:
+        self.logout()
         self.disconnect()

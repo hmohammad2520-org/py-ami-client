@@ -8,7 +8,7 @@ class Success(Response):
             ActionID: Optional[int] = None,
             Message: Optional[str] = None,
             **additional_kwargs
-    ) -> None:
+        ) -> None:
 
         self._asterisk_name = 'Success'
         self._label = 'Success'

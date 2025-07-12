@@ -24,8 +24,9 @@ class Logoff(Action):
             self,
             client,
             raise_timeout = False,
+            raise_on_error_response = False,
             check_connection = False,
             check_authentication = False,
             close_connection = True
         ) -> Response | None:
-        return super().send(client, raise_timeout, check_connection, check_authentication, close_connection)
+        return super().send(client, raise_timeout, raise_on_error_response, check_connection, check_authentication, close_connection)

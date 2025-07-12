@@ -1,7 +1,9 @@
-import os
+import os, dotenv
 from ami_client import AMIClient
 from ami_client.operation.action import Originate
 from ami_client.operation.event import VarSet, Newexten
+
+dotenv.load_dotenv()
 
 ami_client = AMIClient(
     host=os.environ.get('ASTERISK_HOST', '127.0.0.1'),
@@ -16,9 +18,12 @@ ami_client = AMIClient(
 ami_client.add_blacklist([VarSet, Newexten])
 
 def test_connection():
-    ami_client.connect()
-    assert ami_client.connected
-    ami_client.disconnect()
+    with ami_client:
+        assert ami_client.is_connected()
+
+def test_auth():
+    with ami_client:
+        assert ami_client.is_authenticated()
 
 def test_originate():
     assert Originate(
