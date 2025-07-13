@@ -55,7 +55,16 @@ class Registry:
             )
 
 
-    def get_response(self, action_id: int) -> Response|None:
+    def get_response(self, action_id: int) -> Response | None:
+        """
+        Query reponse from registry.
+
+        Args:
+            action_id(int): `ActionID` of Asterisk Operation.
+
+        Returns:
+            Response | None: Server response object with the provided ActionID or None if no reponse object found
+        """
         for response in reversed(self.responses):
             if response.action_id == action_id:
                 return response

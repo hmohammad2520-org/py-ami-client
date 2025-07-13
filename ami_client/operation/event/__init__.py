@@ -1,6 +1,5 @@
 from typing import Type
 from ._base import Event
-
 from ._hangup import Hangup
 from ._newexten import Newexten
 from ._varset import VarSet
