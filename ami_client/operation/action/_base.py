@@ -28,13 +28,13 @@ class Action(Operation):
 
         action_string = self.convert_to_raw_content(self._dict)
         client.socket.sendall(action_string.encode())
-        print(action_string)
         self._sent_to_server = True
 
         start = time.time()
         while (time.time() - start) < client._timeout:
             response: Response | None = client.registry.get_response(self.action_id)
-            time.sleep(0.05)  # to prevent tight locking
+            time.sleep(0.005)  # to prevent tight locking
+            if response is not None: break
 
         else:
             if raise_timeout and response is None:

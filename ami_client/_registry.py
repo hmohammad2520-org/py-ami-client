@@ -47,11 +47,12 @@ class Registry:
         for op_type, target_list in type_list_map.items():
             if isinstance(operation, op_type):
                 target_list.append(operation)
+                return
 
-            else:
-                raise AMIExceptions.ClientError.OperationError(
-                    'operation must be an instance of Operation subclasses'
-                )
+        else:
+            raise AMIExceptions.ClientError.OperationError(
+                'operation must be an instance of Operation subclasses'
+            )
 
 
     def get_response(self, action_id: int) -> Response|None:

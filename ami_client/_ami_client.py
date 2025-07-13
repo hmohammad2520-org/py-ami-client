@@ -36,7 +36,6 @@ class AMIClient:
 
 
     def connect(self) -> None:
-
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(self._timeout)
         self.listen_thread = threading.Thread(target=self.listen_loop, daemon=True)
@@ -47,11 +46,11 @@ class AMIClient:
     def disconnect(self) -> None:
         if self.is_authenticated():
             self.logout()
+        
+        self.socket.close()
 
         if not threading.current_thread() == self.listen_thread:
             self.listen_thread.join()
-
-        self.socket.close()
 
     def listen_loop(self) -> None:
         buffer = b''
@@ -59,7 +58,6 @@ class AMIClient:
         while self.is_connected():
             try: 
                 data = self.socket.recv(self._socket_buffer)
-                print(data)
             ## This error excepted if no event triggers in server for `self._timeout` amount of time.
             except TimeoutError: continue
             except OSError as e:
@@ -103,7 +101,7 @@ class AMIClient:
             return Logoff().send(self)
 
 
-    # @return_false_on_error
+    @return_false_on_error
     def is_connected(self) -> bool:
         if hasattr(socket, 'MSG_DONTWAIT'): self.socket.send(b'', socket.MSG_DONTWAIT)  # type: ignore
         else: self.socket.send(b'')

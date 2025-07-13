@@ -1,5 +1,5 @@
-from typing import Any, Dict, Type
 import time
+from typing import Any, Dict
 
 ASTERISK_BANNER: str = 'Asterisk Call Manager'
 
@@ -12,7 +12,6 @@ class Operation:
     response: str | None
 
     def __init__(self, **kwargs: Any):
-        self._name: str | None = None
         self._list_id: int | None = None
         self._raw: str = ''
         self._dict: Dict[str, Any] = {}
@@ -22,25 +21,12 @@ class Operation:
         self._dict.update(kwargs)
         self._raw = self.convert_to_raw_content(self._dict)
 
-        if hasattr(self, 'action'):
-            self._name = self.action
-        
-        elif hasattr(self, 'event'):
-            self._name = self.event
-        
-        elif hasattr(self, 'response'):
-            self._name = self.response
-        
-        else:
-            raise AttributeError('Operation must have one of this attributes: action, event, response')
-
     @staticmethod
     def parse_raw_content(raw: str) -> Dict[str, Any]:
         lines = raw.strip().split('\r\n')
         operation_dict: Dict[str, Any] = {}
         for line in lines:
             if ASTERISK_BANNER in line: continue
-
             key, value = line.split(':', 1)
             operation_dict[key.lstrip()] = value.lstrip()
 

@@ -1,6 +1,6 @@
 from typing import Type
 from ._base import Action
-
+from ._core_status import CoreStatus
 from ._login import Login
 from ._logoff import Logoff
 from ._originate import Originate
@@ -39,7 +39,7 @@ action_map: dict[str, Type[Action] | None] = {
     'CoreSettings': None, # NotImplementedYet
     'CoreShowChannelMap': None, # NotImplementedYet
     'CoreShowChannels': None, # NotImplementedYet
-    'CoreStatus': None, # NotImplementedYet
+    'CoreStatus': CoreStatus, # NotImplementedYet
     'CreateConfig': None, # NotImplementedYet
     'DAHDIDNDoff': None, # NotImplementedYet
     'DAHDIDNDon': None, # NotImplementedYet
@@ -164,9 +164,8 @@ action_map: dict[str, Type[Action] | None] = {
 __all__ = [
     'Action',
     'action_map',
-
+    'CoreStatus',
     'Login',
     'Logoff',
     'Ping',
 ]
-
