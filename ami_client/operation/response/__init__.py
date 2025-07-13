@@ -12,7 +12,6 @@ response_map: dict[str, Type[Response] | None] = {
 __all__ = [
     'Response',
     'response_map',
-
     'Error',
     'Success',
 ]

@@ -188,7 +188,6 @@ event_map: dict[str, Type[Event] | None] = {
 __all__ = [
     'Event',
     'event_map',
-
     'Hangup',
     'Newexten',
     'VarSet',

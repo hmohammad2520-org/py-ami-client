@@ -6,14 +6,11 @@ from .unkhown_operation import UnknownOperation
 
 __all__ = [
     'Operation',
-
     'Action',
     'Event',
     'Response',
-
     'action_map',
     'event_map',
     'response_map',
-
     'UnknownOperation',
 ]
