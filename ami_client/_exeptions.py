@@ -26,6 +26,7 @@ class AMIExceptions(AMIBaseException):
     class ServerError(_OperationErrors): ...
     class ClientError(_OperationErrors): ...
 
+
 __all__ = [
     'AMIExceptions',
 ]
