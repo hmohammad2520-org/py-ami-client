@@ -1,9 +1,13 @@
-.git
-.pytest_cache
-.__cache__
+# abc folders
+.git/
+.pytest_cache/
+.venv/
+.temp/
+.log/
+.db/
+.dev/
+__cache__/
+
+# abc Files
 .env
-
-test_service.py
-
-/.vscode/
-/.venv/
+dev_*.*
