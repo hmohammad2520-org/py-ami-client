@@ -3,7 +3,9 @@ from classmods import suppress_errors
 from typing import List, Literal, Optional, Self, Type, Union, cast
 from ._exeptions import AMIExceptions
 
+
 EXCEPTED_OS_ERROR = 'An operation was attempted on something that is not a socket'
+
 
 class AMIClient:
     from .operation import Operation, Response
@@ -149,7 +151,7 @@ class AMIClient:
             return Logoff().send(self)
 
 
-    @suppress_errors('false')
+    @suppress_errors(False)
     def is_connected(self) -> bool:
         """
         Check whether the client socket is still connected.
@@ -161,7 +163,7 @@ class AMIClient:
         else: self.socket.send(b'')
         return True
 
-    @suppress_errors('false')
+    @suppress_errors(False)
     def is_authenticated(self) -> bool:
         """
         Check whether the client is authenticated with the AMI server.
