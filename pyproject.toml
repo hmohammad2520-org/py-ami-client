@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-ami-client"
-version = "0.0.3"
+version = "0.1.0"
 description = "Python Asterisk Management Interface Client"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
-    { name = "Radin-System", email = "technical@rsto.ir" }
+    { name = "hmohammad2520-org", email = "hmohammad2520@gmail.com" }
 ]
 keywords = ["python", "library", "asterisk", "ami"]
 classifiers = [
@@ -23,5 +23,5 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.urls]
-Homepage = "https://github.com/Radin-System/py-ami-client"
-BugTracker = "https://github.com/Radin-System/py-ami-client/issues"
+Homepage = "https://github.com/hmohammad2520-org/py-ami-client"
+BugTracker = "https://github.com/hmohammad2520-org/py-ami-client/issues"

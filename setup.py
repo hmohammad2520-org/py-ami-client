@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='py-ami-client',
-    version='0.0.3',
+    version='0.1.0',
     license="MIT",
     description='Python Asterisk Management Interface Client',
     author='Radin-System',
@@ -11,7 +11,7 @@ setup(
     install_requires=[
         "classmods==0.3.2",
     ],
-    packages=find_packages(),
+    packages=find_packages(exclude=['test', 'test.*']),
     include_package_data=True,
     zip_safe=False,
 )
