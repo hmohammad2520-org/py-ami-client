@@ -9,7 +9,7 @@ setup(
     author_email='technical@rsto.ir',
     url='https://github.com/Radin-System/py-ami-client',
     install_requires=[
-        "classmods==0.2.0",
+        "classmods==0.3.2",
     ],
     packages=find_packages(),
     include_package_data=True,

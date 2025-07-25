@@ -1,5 +1,5 @@
 import socket, threading
-from classmods import suppress_errors
+from classmods import ENVMod, suppress_errors
 from typing import List, Literal, Optional, Self, Type, Union, cast
 from ._exeptions import AMIExceptions
 
@@ -9,18 +9,18 @@ EXCEPTED_OS_ERROR = 'An operation was attempted on something that is not a socke
 
 class AMIClient:
     from .operation import Operation, Response
-
+    @ENVMod.register(cast={'events': str})
     def __init__(
             self,
-            host: str = '127.0.0.1',
-            port: int = 5038,
-            Username: Optional[str] = None,
-            Secret: Optional[str] = None,
-            AuthType: Optional[Literal['plain', 'MD5']] = None,
-            Key: Optional[str] = None,
-            Events: Optional[Union[Literal['on', 'off'], list[str]]] = None,
-            timeout: int = 10,
-            socket_buffer: int = 2048,
+            host: Optional[str] = None,
+            port: Optional[int] = None,
+            username: Optional[str] = None,
+            secret: Optional[str] = None,
+            auth_type: Optional[Literal['plain', 'MD5']] = None,
+            key: Optional[str] = None,
+            events: Optional[Union[Literal['on', 'off'], list[str]]] = None,
+            timeout: Optional[int] = None,
+            socket_buffer: Optional[int] = None,
         ) -> None:
         """
         A client for interacting with the Asterisk Manager Interface (AMI) over a socket connection.
@@ -32,25 +32,25 @@ class AMIClient:
             registry (Registry): Registry object used to manage and dispatch AMI operations.
 
         Args:
-            host (str): Hostname or IP address of the AMI server. Defaults to '127.0.0.1'.
-            port (int): TCP port to connect to. Defaults to 5038.
-            Username (Optional[str]): AMI username.
-            Secret (Optional[str]): AMI password.
-            AuthType (Optional[Literal['plain', 'MD5']]): Authentication method.
-            Key (Optional[str]): Challenge key, used for MD5 authentication.
-            Events (Optional[Union[Literal['on', 'off'], list[str]]]): Event subscriptions or list.
-            timeout (int): Socket connection timeout in seconds. Defaults to 10.
-            socket_buffer (int): Size of buffer for reading socket data. Defaults to 2048.
+            host (str): Hostname or IP address of the AMI server.
+            port (int): TCP port to connect to.
+            username (Optional[str]): AMI username.
+            secret (Optional[str]): AMI password.
+            auth_type (Optional[Literal['plain', 'MD5']]): Authentication method.
+            key (Optional[str]): Challenge key, used for MD5 authentication.
+            events (Optional[Union[Literal['on', 'off'], list[str]]]): Event subscriptions or list.
+            timeout (int): Socket connection timeout in seconds.
+            socket_buffer (int): Size of buffer for reading socket data.
         """
-        self._host = host
-        self._port = port
-        self._username = Username
-        self._secret = Secret
-        self._auth_type = AuthType
-        self._key = Key
-        self._events = Events
-        self._timeout = timeout
-        self._socket_buffer = socket_buffer
+        self._host = host or '127.0.0.1'
+        self._port = port or 5038
+        self._username = username
+        self._secret = secret
+        self._auth_type = auth_type
+        self._key = key
+        self._events = events
+        self._timeout = timeout or 10
+        self._socket_buffer = socket_buffer or 2048
 
         from ._registry import Registry
         self.registry = Registry()
