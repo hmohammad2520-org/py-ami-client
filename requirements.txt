@@ -1,4 +1,5 @@
+classmods==0.3.2
+
 python-dotenv
 pytest
 setuptools
-classmods
