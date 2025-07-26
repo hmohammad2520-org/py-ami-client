@@ -1,4 +1,4 @@
-classmods==0.3.2
+classmods==0.3.3
 
 python-dotenv
 pytest
