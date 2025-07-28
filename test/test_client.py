@@ -4,11 +4,11 @@ from ami_client.operation.action import CoreStatus
 from ami_client.operation.event import VarSet, Newexten
 
 def test_load_env():
+    ENVMod.load_dotenv()
     ENVMod.save_example()
     ENVMod.sync_env_file()
 
 def test_create_client():
-    ENVMod.load_dotenv()
     ami_client = AMIClient(**ENVMod.load_args(AMIClient.__init__))
     ami_client.add_blacklist([VarSet, Newexten])
     assert ami_client

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-ami-client"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python Asterisk Management Interface Client"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -18,7 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "classmods==0.3.3",
+    "classmods==1.0.0",
 ]
 requires-python = ">=3.9"
 
