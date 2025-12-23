@@ -9,7 +9,7 @@ EXCEPTED_OS_ERROR = 'An operation was attempted on something that is not a socke
 
 class AMIClient:
     from .operation import Operation, Response
-    @ENVMod.register(cast={'events': str})
+    @ENVMod.register(section_name='AMIClient', cast={'events': str})
     def __init__(
             self,
             host: Optional[str] = None,
