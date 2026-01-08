@@ -1,16 +1,17 @@
-from ._base import Operation
-from .action import Action, action_map
-from .event import Event, event_map
+from ._base import Operation, NotImplementedOperation
+from .action import Action, PendingAction, action_map
+from .event import Event, EventDispatcher, event_map
 from .response import Response, response_map
-from .unkhown_operation import UnknownOperation
 
 __all__ = [
     'Operation',
+    'NotImplementedOperation',
     'Action',
+    'PendingAction',
     'Event',
+    'EventDispatcher',
     'Response',
     'action_map',
     'event_map',
     'response_map',
-    'UnknownOperation',
 ]

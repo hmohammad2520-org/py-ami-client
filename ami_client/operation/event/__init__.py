@@ -1,192 +1,208 @@
 from typing import Type
-from ._base import Event
-from ._hangup import Hangup
-from ._newexten import Newexten
-from ._varset import VarSet
+from ._base import Event, EventDispatcher
+from .agent import (
+    Agent, AgentCalled, AgentComplete, AgentConnect, AgentDump, 
+    AgentLogin, AgentLogoff, AgentRingNoAnswer, Agents, AgentsComplete,
+)
+from .agi_exec import AGIExecEnd, AGIExecStart
+from .alarm import BaseAlarm, Alarm, AlarmClear
+from .aoc import AOC, AOC_D, AOC_E, AOC_S
+from .aor import AOR, AorDetail, AorList, AorListComplete
+from .hangup import Hangup
+from .newexten import Newexten
+from .varset import VarSet
 
+from ...operation import NotImplementedOperation
 
-event_map: dict[str, Type[Event] | None] = {
-    'AGIExecEnd': None, #NotImplementedYet
-    'AGIExecStart': None, #NotImplementedYet
-    'AOC-D': None, #NotImplementedYet
-    'AOC-E': None, #NotImplementedYet
-    'AOC-S': None, #NotImplementedYet
-    'AgentCalled': None, #NotImplementedYet
-    'AgentComplete': None, #NotImplementedYet
-    'AgentConnect': None, #NotImplementedYet
-    'AgentDump': None, #NotImplementedYet
-    'AgentLogin': None, #NotImplementedYet
-    'AgentLogoff': None, #NotImplementedYet
-    'AgentRingNoAnswer': None, #NotImplementedYet
-    'Agents': None, #NotImplementedYet
-    'AgentsComplete': None, #NotImplementedYet
-    'Alarm': None, #NotImplementedYet
-    'AlarmClear': None, #NotImplementedYet
-    'AorDetail': None, #NotImplementedYet
-    'AorList': None, #NotImplementedYet
-    'AorListComplete': None, #NotImplementedYet
-    'AsyncAGIEnd': None, #NotImplementedYet
-    'AsyncAGIExec': None, #NotImplementedYet
-    'AsyncAGIStart': None, #NotImplementedYet
-    'AttendedTransfer': None, #NotImplementedYet
-    'AuthDetail': None, #NotImplementedYet
-    'AuthList': None, #NotImplementedYet
-    'AuthListComplete': None, #NotImplementedYet
-    'AuthMethodNotAllowed': None, #NotImplementedYet
-    'BlindTransfer': None, #NotImplementedYet
-    'BridgeCreate': None, #NotImplementedYet
-    'BridgeDestroy': None, #NotImplementedYet
-    'BridgeEnter': None, #NotImplementedYet
-    'BridgeInfoChannel': None, #NotImplementedYet
-    'BridgeInfoComplete': None, #NotImplementedYet
-    'BridgeLeave': None, #NotImplementedYet
-    'BridgeMerge': None, #NotImplementedYet
-    'BridgeVideoSourceUpdate': None, #NotImplementedYet
-    'CEL': None, #NotImplementedYet
-    'Cdr': None, #NotImplementedYet
-    'ChallengeResponseFailed': None, #NotImplementedYet
-    'ChallengeSent': None, #NotImplementedYet
-    'ChanSpyStart': None, #NotImplementedYet
-    'ChanSpyStop': None, #NotImplementedYet
-    'ChannelTalkingStart': None, #NotImplementedYet
-    'ChannelTalkingStop': None, #NotImplementedYet
-    'ConfbridgeEnd': None, #NotImplementedYet
-    'ConfbridgeJoin': None, #NotImplementedYet
-    'ConfbridgeLeave': None, #NotImplementedYet
-    'ConfbridgeList': None, #NotImplementedYet
-    'ConfbridgeListRooms': None, #NotImplementedYet
-    'ConfbridgeMute': None, #NotImplementedYet
-    'ConfbridgeRecord': None, #NotImplementedYet
-    'ConfbridgeStart': None, #NotImplementedYet
-    'ConfbridgeStopRecord': None, #NotImplementedYet
-    'ConfbridgeTalking': None, #NotImplementedYet
-    'ConfbridgeUnmute': None, #NotImplementedYet
-    'ContactList': None, #NotImplementedYet
-    'ContactListComplete': None, #NotImplementedYet
-    'ContactStatus': None, #NotImplementedYet
-    'ContactStatusDetail': None, #NotImplementedYet
-    'CoreShowChannel': None, #NotImplementedYet
-    'CoreShowChannelMapComplete': None, #NotImplementedYet
-    'CoreShowChannelsComplete': None, #NotImplementedYet
-    'DAHDIChannel': None, #NotImplementedYet
-    'DNDState': None, #NotImplementedYet
-    'DTMFBegin': None, #NotImplementedYet
-    'DTMFEnd': None, #NotImplementedYet
-    'DeadlockStart': None, #NotImplementedYet
-    'DeviceStateChange': None, #NotImplementedYet
-    'DeviceStateListComplete': None, #NotImplementedYet
-    'DialBegin': None, #NotImplementedYet
-    'DialEnd': None, #NotImplementedYet
-    'DialState': None, #NotImplementedYet
-    'EndpointDetail': None, #NotImplementedYet
-    'EndpointDetailComplete': None, #NotImplementedYet
-    'EndpointList': None, #NotImplementedYet
-    'EndpointListComplete': None, #NotImplementedYet
-    'ExtensionStateListComplete': None, #NotImplementedYet
-    'ExtensionStatus': None, #NotImplementedYet
-    'FAXSession': None, #NotImplementedYet
-    'FAXSessionsComplete': None, #NotImplementedYet
-    'FAXSessionsEntry': None, #NotImplementedYet
-    'FAXStats': None, #NotImplementedYet
-    'FAXStatus': None, #NotImplementedYet
-    'FailedACL': None, #NotImplementedYet
-    'Flash': None, #NotImplementedYet
-    'FullyBooted': None, #NotImplementedYet
+event_map: dict[str, Type[Event] | Type[NotImplementedOperation]] = {
+    'AGIExecEnd': AGIExecEnd, 
+    'AGIExecStart': AGIExecStart,
+    'AOC-D': AOC_D,
+    'AOC-E': AOC_E,
+    'AOC-S': AOC_S,
+    'AgentCalled': AgentCalled,
+    'AgentComplete': AgentComplete,
+    'AgentConnect': AgentConnect,
+    'AgentDump': AgentDump,
+    'AgentLogin': AgentLogin,
+    'AgentLogoff': AgentLogoff,
+    'AgentRingNoAnswer': AgentRingNoAnswer,
+    'Agents': Agents,
+    'AgentsComplete': AgentsComplete,
+    'Alarm': Alarm,
+    'AlarmClear': AlarmClear,
+    'AorDetail': AorDetail,
+    'AorList': AorList,
+    'AorListComplete': AorListComplete,
+    'AsyncAGIEnd': NotImplementedOperation,
+    'AsyncAGIExec': NotImplementedOperation,
+    'AsyncAGIStart': NotImplementedOperation,
+    'AttendedTransfer': NotImplementedOperation,
+    'AuthDetail': NotImplementedOperation,
+    'AuthList': NotImplementedOperation,
+    'AuthListComplete': NotImplementedOperation,
+    'AuthMethodNotAllowed': NotImplementedOperation,
+    'BlindTransfer': NotImplementedOperation,
+    'BridgeCreate': NotImplementedOperation,
+    'BridgeDestroy': NotImplementedOperation,
+    'BridgeEnter': NotImplementedOperation,
+    'BridgeInfoChannel': NotImplementedOperation,
+    'BridgeInfoComplete': NotImplementedOperation,
+    'BridgeLeave': NotImplementedOperation,
+    'BridgeMerge': NotImplementedOperation,
+    'BridgeVideoSourceUpdate': NotImplementedOperation,
+    'CEL': NotImplementedOperation,
+    'Cdr': NotImplementedOperation,
+    'ChallengeResponseFailed': NotImplementedOperation,
+    'ChallengeSent': NotImplementedOperation,
+    'ChanSpyStart': NotImplementedOperation,
+    'ChanSpyStop': NotImplementedOperation,
+    'ChannelTalkingStart': NotImplementedOperation,
+    'ChannelTalkingStop': NotImplementedOperation,
+    'ConfbridgeEnd': NotImplementedOperation,
+    'ConfbridgeJoin': NotImplementedOperation,
+    'ConfbridgeLeave': NotImplementedOperation,
+    'ConfbridgeList': NotImplementedOperation,
+    'ConfbridgeListRooms': NotImplementedOperation,
+    'ConfbridgeMute': NotImplementedOperation,
+    'ConfbridgeRecord': NotImplementedOperation,
+    'ConfbridgeStart': NotImplementedOperation,
+    'ConfbridgeStopRecord': NotImplementedOperation,
+    'ConfbridgeTalking': NotImplementedOperation,
+    'ConfbridgeUnmute': NotImplementedOperation,
+    'ContactList': NotImplementedOperation,
+    'ContactListComplete': NotImplementedOperation,
+    'ContactStatus': NotImplementedOperation,
+    'ContactStatusDetail': NotImplementedOperation,
+    'CoreShowChannel': NotImplementedOperation,
+    'CoreShowChannelMapComplete': NotImplementedOperation,
+    'CoreShowChannelsComplete': NotImplementedOperation,
+    'DAHDIChannel': NotImplementedOperation,
+    'DNDState': NotImplementedOperation,
+    'DTMFBegin': NotImplementedOperation,
+    'DTMFEnd': NotImplementedOperation,
+    'DeadlockStart': NotImplementedOperation,
+    'DeviceStateChange': NotImplementedOperation,
+    'DeviceStateListComplete': NotImplementedOperation,
+    'DialBegin': NotImplementedOperation,
+    'DialEnd': NotImplementedOperation,
+    'DialState': NotImplementedOperation,
+    'EndpointDetail': NotImplementedOperation,
+    'EndpointDetailComplete': NotImplementedOperation,
+    'EndpointList': NotImplementedOperation,
+    'EndpointListComplete': NotImplementedOperation,
+    'ExtensionStateListComplete': NotImplementedOperation,
+    'ExtensionStatus': NotImplementedOperation,
+    'FAXSession': NotImplementedOperation,
+    'FAXSessionsComplete': NotImplementedOperation,
+    'FAXSessionsEntry': NotImplementedOperation,
+    'FAXStats': NotImplementedOperation,
+    'FAXStatus': NotImplementedOperation,
+    'FailedACL': NotImplementedOperation,
+    'Flash': NotImplementedOperation,
+    'FullyBooted': NotImplementedOperation,
     'Hangup': Hangup,
-    'HangupHandlerPop': None, #NotImplementedYet
-    'HangupHandlerPush': None, #NotImplementedYet
-    'HangupHandlerRun': None, #NotImplementedYet
-    'HangupRequest': None, #NotImplementedYet
-    'Hold': None, #NotImplementedYet
-    'IdentifyDetail': None, #NotImplementedYet
-    'InvalidAccountID': None, #NotImplementedYet
-    'InvalidPassword': None, #NotImplementedYet
-    'InvalidTransport': None, #NotImplementedYet
-    'Load': None, #NotImplementedYet
-    'LoadAverageLimit': None, #NotImplementedYet
-    'LocalBridge': None, #NotImplementedYet
-    'LocalOptimizationBegin': None, #NotImplementedYet
-    'LocalOptimizationEnd': None, #NotImplementedYet
-    'LogChannel': None, #NotImplementedYet
-    'MCID': None, #NotImplementedYet
-    'MWIGet': None, #NotImplementedYet
-    'MWIGetComplete': None, #NotImplementedYet
-    'MeetmeEnd': None, #NotImplementedYet
-    'MeetmeJoin': None, #NotImplementedYet
-    'MeetmeLeave': None, #NotImplementedYet
-    'MeetmeList': None, #NotImplementedYet
-    'MeetmeListRooms': None, #NotImplementedYet
-    'MeetmeMute': None, #NotImplementedYet
-    'MeetmeTalkRequest': None, #NotImplementedYet
-    'MeetmeTalking': None, #NotImplementedYet
-    'MemoryLimit': None, #NotImplementedYet
-    'MessageWaiting': None, #NotImplementedYet
-    'MiniVoiceMail': None, #NotImplementedYet
-    'MixMonitorMute': None, #NotImplementedYet
-    'MixMonitorStart': None, #NotImplementedYet
-    'MixMonitorStop': None, #NotImplementedYet
-    'MusicOnHoldStart': None, #NotImplementedYet
-    'MusicOnHoldStop': None, #NotImplementedYet
-    'NewAccountCode': None, #NotImplementedYet
-    'NewCallerid': None, #NotImplementedYet
-    'NewConnectedLine': None, #NotImplementedYet
+    'HangupHandlerPop': NotImplementedOperation,
+    'HangupHandlerPush': NotImplementedOperation,
+    'HangupHandlerRun': NotImplementedOperation,
+    'HangupRequest': NotImplementedOperation,
+    'Hold': NotImplementedOperation,
+    'IdentifyDetail': NotImplementedOperation,
+    'InvalidAccountID': NotImplementedOperation,
+    'InvalidPassword': NotImplementedOperation,
+    'InvalidTransport': NotImplementedOperation,
+    'Load': NotImplementedOperation,
+    'LoadAverageLimit': NotImplementedOperation,
+    'LocalBridge': NotImplementedOperation,
+    'LocalOptimizationBegin': NotImplementedOperation,
+    'LocalOptimizationEnd': NotImplementedOperation,
+    'LogChannel': NotImplementedOperation,
+    'MCID': NotImplementedOperation,
+    'MWIGet': NotImplementedOperation,
+    'MWIGetComplete': NotImplementedOperation,
+    'MeetmeEnd': NotImplementedOperation,
+    'MeetmeJoin': NotImplementedOperation,
+    'MeetmeLeave': NotImplementedOperation,
+    'MeetmeList': NotImplementedOperation,
+    'MeetmeListRooms': NotImplementedOperation,
+    'MeetmeMute': NotImplementedOperation,
+    'MeetmeTalkRequest': NotImplementedOperation,
+    'MeetmeTalking': NotImplementedOperation,
+    'MemoryLimit': NotImplementedOperation,
+    'MessageWaiting': NotImplementedOperation,
+    'MiniVoiceMail': NotImplementedOperation,
+    'MixMonitorMute': NotImplementedOperation,
+    'MixMonitorStart': NotImplementedOperation,
+    'MixMonitorStop': NotImplementedOperation,
+    'MusicOnHoldStart': NotImplementedOperation,
+    'MusicOnHoldStop': NotImplementedOperation,
+    'NewAccountCode': NotImplementedOperation,
+    'NewCallerid': NotImplementedOperation,
+    'NewConnectedLine': NotImplementedOperation,
     'Newexten': Newexten,
-    'Newchannel': None, #NotImplementedYet
-    'Newstate': None, #NotImplementedYet
-    'OriginateResponse': None, #NotImplementedYet
-    'ParkedCall': None, #NotImplementedYet
-    'ParkedCallGiveUp': None, #NotImplementedYet
-    'ParkedCallSwap': None, #NotImplementedYet
-    'ParkedCallTimeOut': None, #NotImplementedYet
-    'PeerStatus': None, #NotImplementedYet
-    'Pickup': None, #NotImplementedYet
-    'PresenceStateChange': None, #NotImplementedYet
-    'PresenceStateListComplete': None, #NotImplementedYet
-    'PresenceStatus': None, #NotImplementedYet
-    'QueueCallerAbandon': None, #NotImplementedYet
-    'QueueCallerJoin': None, #NotImplementedYet
-    'QueueCallerLeave': None, #NotImplementedYet
-    'QueueEntry': None, #NotImplementedYet
-    'QueueMemberAdded': None, #NotImplementedYet
-    'QueueMemberPause': None, #NotImplementedYet
-    'QueueMemberPenalty': None, #NotImplementedYet
-    'QueueMemberRemoved': None, #NotImplementedYet
-    'QueueMemberRinginuse': None, #NotImplementedYet
-    'QueueMemberStatus': None, #NotImplementedYet
-    'QueueParams': None, #NotImplementedYet
-    'RTCPReceived': None, #NotImplementedYet
-    'RTCPSent': None, #NotImplementedYet
-    'ReceiveFAX': None, #NotImplementedYet
-    'Registry': None, #NotImplementedYet
-    'Reload': None, #NotImplementedYet
-    'Rename': None, #NotImplementedYet
-    'RequestBadFormat': None, #NotImplementedYet
-    'RequestNotAllowed': None, #NotImplementedYet
-    'RequestNotSupported': None, #NotImplementedYet
-    'SendFAX': None, #NotImplementedYet
-    'SessionLimit': None, #NotImplementedYet
-    'Shutdown': None, #NotImplementedYet
-    'SoftHangupRequest': None, #NotImplementedYet
-    'SpanAlarm': None, #NotImplementedYet
-    'SpanAlarmClear': None, #NotImplementedYet
-    'Status': None, #NotImplementedYet
-    'StatusComplete': None, #NotImplementedYet
-    'SuccessfulAuth': None, #NotImplementedYet
-    'TransportDetail': None, #NotImplementedYet
-    'UnParkedCall': None, #NotImplementedYet
-    'UnexpectedAddress': None, #NotImplementedYet
-    'Unhold': None, #NotImplementedYet
-    'Unload': None, #NotImplementedYet
-    'UserEvent': None, #NotImplementedYet
+    'Newchannel': NotImplementedOperation,
+    'Newstate': NotImplementedOperation,
+    'OriginateResponse': NotImplementedOperation,
+    'ParkedCall': NotImplementedOperation,
+    'ParkedCallGiveUp': NotImplementedOperation,
+    'ParkedCallSwap': NotImplementedOperation,
+    'ParkedCallTimeOut': NotImplementedOperation,
+    'PeerStatus': NotImplementedOperation,
+    'Pickup': NotImplementedOperation,
+    'PresenceStateChange': NotImplementedOperation,
+    'PresenceStateListComplete': NotImplementedOperation,
+    'PresenceStatus': NotImplementedOperation,
+    'QueueCallerAbandon': NotImplementedOperation,
+    'QueueCallerJoin': NotImplementedOperation,
+    'QueueCallerLeave': NotImplementedOperation,
+    'QueueEntry': NotImplementedOperation,
+    'QueueMemberAdded': NotImplementedOperation,
+    'QueueMemberPause': NotImplementedOperation,
+    'QueueMemberPenalty': NotImplementedOperation,
+    'QueueMemberRemoved': NotImplementedOperation,
+    'QueueMemberRinginuse': NotImplementedOperation,
+    'QueueMemberStatus': NotImplementedOperation,
+    'QueueParams': NotImplementedOperation,
+    'RTCPReceived': NotImplementedOperation,
+    'RTCPSent': NotImplementedOperation,
+    'ReceiveFAX': NotImplementedOperation,
+    'Registry': NotImplementedOperation,
+    'Reload': NotImplementedOperation,
+    'Rename': NotImplementedOperation,
+    'RequestBadFormat': NotImplementedOperation,
+    'RequestNotAllowed': NotImplementedOperation,
+    'RequestNotSupported': NotImplementedOperation,
+    'SendFAX': NotImplementedOperation,
+    'SessionLimit': NotImplementedOperation,
+    'Shutdown': NotImplementedOperation,
+    'SoftHangupRequest': NotImplementedOperation,
+    'SpanAlarm': NotImplementedOperation,
+    'SpanAlarmClear': NotImplementedOperation,
+    'Status': NotImplementedOperation,
+    'StatusComplete': NotImplementedOperation,
+    'SuccessfulAuth': NotImplementedOperation,
+    'TransportDetail': NotImplementedOperation,
+    'UnParkedCall': NotImplementedOperation,
+    'UnexpectedAddress': NotImplementedOperation,
+    'Unhold': NotImplementedOperation,
+    'Unload': NotImplementedOperation,
+    'UserEvent': NotImplementedOperation,
     'VarSet': VarSet,
-    'VoicemailPasswordChange': None, #NotImplementedYet
-    'Wink': None, #NotImplementedYet
+    'VoicemailPasswordChange': NotImplementedOperation,
+    'Wink': NotImplementedOperation,
 }
 
 
 __all__ = [
     'Event',
+    'EventDispatcher',
     'event_map',
+    'AGIExecEnd', 'AGIExecStart',
+    'AOC', 'AOC_D', 'AOC_E', 'AOC_S',
+    'Agent', 'AgentCalled', 'AgentComplete', 'AgentConnect', 'AgentDump',
+    'AgentLogin', 'AgentLogoff', 'AgentRingNoAnswer', 'Agents', 'AgentsComplete',
+    'BaseAlarm', 'Alarm', 'AlarmClear',
+    'AOR', 'AorDetail', 'AorList', 'AorListComplete',
     'Hangup',
     'Newexten',
     'VarSet',

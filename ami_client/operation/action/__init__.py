@@ -1,168 +1,171 @@
 from typing import Type
-from ._base import Action
-from ._core_status import CoreStatus
-from ._login import Login
-from ._logoff import Logoff
-from ._originate import Originate
-from ._ping import Ping
+from ._base import Action, PendingAction
+from .core_status import CoreStatus
+from .login import Login
+from .logoff import Logoff
+from .originate import Originate
+from .ping import Ping
 
-action_map: dict[str, Type[Action] | None] = {
-    'AGI': None, # NotImplementedYet
-    'AOCMessage': None, # NotImplementedYet
-    'AbsoluteTimeout': None, # NotImplementedYet
-    'AgentLogoff': None, # NotImplementedYet
-    'Agents': None, # NotImplementedYet
-    'Atxfer': None, # NotImplementedYet
-    'BlindTransfer': None, # NotImplementedYet
-    'Bridge': None, # NotImplementedYet
-    'BridgeDestroy': None, # NotImplementedYet
-    'BridgeInfo': None, # NotImplementedYet
-    'BridgeKick': None, # NotImplementedYet
-    'BridgeList': None, # NotImplementedYet
-    'BridgeTechnologyList': None, # NotImplementedYet       
-    'BridgeTechnologySuspend': None, # NotImplementedYet    
-    'BridgeTechnologyUnsuspend': None, # NotImplementedYet  
-    'CancelAtxfer': None, # NotImplementedYet
-    'Challenge': None, # NotImplementedYet
-    'Command': None, # NotImplementedYet
-    'ConfbridgeKick': None, # NotImplementedYet
-    'ConfbridgeList': None, # NotImplementedYet
-    'ConfbridgeListRooms': None, # NotImplementedYet        
-    'ConfbridgeLock': None, # NotImplementedYet
-    'ConfbridgeMute': None, # NotImplementedYet
-    'ConfbridgeSetSingleVideoSrc': None, # NotImplementedYet
-    'ConfbridgeStartRecord': None, # NotImplementedYet      
-    'ConfbridgeStopRecord': None, # NotImplementedYet       
-    'ConfbridgeUnlock': None, # NotImplementedYet
-    'ConfbridgeUnmute': None, # NotImplementedYet
-    'ControlPlayback': None, # NotImplementedYet
-    'CoreSettings': None, # NotImplementedYet
-    'CoreShowChannelMap': None, # NotImplementedYet
-    'CoreShowChannels': None, # NotImplementedYet
-    'CoreStatus': CoreStatus, # NotImplementedYet
-    'CreateConfig': None, # NotImplementedYet
-    'DAHDIDNDoff': None, # NotImplementedYet
-    'DAHDIDNDon': None, # NotImplementedYet
-    'DAHDIDialOffhook': None, # NotImplementedYet
-    'DAHDIHangup': None, # NotImplementedYet
-    'DAHDIRestart': None, # NotImplementedYet
-    'DAHDIShowChannels': None, # NotImplementedYet
-    'DAHDIShowStatus': None, # NotImplementedYet
-    'DAHDITransfer': None, # NotImplementedYet
-    'DBDel': None, # NotImplementedYet
-    'DBDelTree': None, # NotImplementedYet
-    'DBGet': None, # NotImplementedYet
-    'DBGetTree': None, # NotImplementedYet
-    'DBPut': None, # NotImplementedYet
-    'DeviceStateList': None, # NotImplementedYet
-    'DialplanExtensionAdd': None, # NotImplementedYet
-    'DialplanExtensionRemove': None, # NotImplementedYet
-    'Events': None, # NotImplementedYet
-    'ExtensionState': None, # NotImplementedYet
-    'ExtensionStateList': None, # NotImplementedYet
-    'FAXSession': None, # NotImplementedYet
-    'FAXSessions': None, # NotImplementedYet
-    'FAXStats': None, # NotImplementedYet
-    'Filter': None, # NotImplementedYet
-    'GetConfig': None, # NotImplementedYet
-    'GetConfigJSON': None, # NotImplementedYet
-    'Getvar': None, # NotImplementedYet
-    'Hangup': None, # NotImplementedYet
-    'IAXnetstats': None, # NotImplementedYet
-    'IAXpeerlist': None, # NotImplementedYet
-    'IAXpeers': None, # NotImplementedYet
-    'IAXregistry': None, # NotImplementedYet
-    'JabberSend': None, # NotImplementedYet
-    'ListCategories': None, # NotImplementedYet
-    'ListCommands': None, # NotImplementedYet
-    'LocalOptimizeAway': None, # NotImplementedYet
-    'LoggerRotate': None, # NotImplementedYet
+from ...operation import NotImplementedOperation
+
+action_map: dict[str, Type[Action] | Type[NotImplementedOperation]] = {
+    'AGI': NotImplementedOperation,
+    'AOCMessage': NotImplementedOperation,
+    'AbsoluteTimeout': NotImplementedOperation,
+    'AgentLogoff': NotImplementedOperation,
+    'Agents': NotImplementedOperation,
+    'Atxfer': NotImplementedOperation,
+    'BlindTransfer': NotImplementedOperation,
+    'Bridge': NotImplementedOperation,
+    'BridgeDestroy': NotImplementedOperation,
+    'BridgeInfo': NotImplementedOperation,
+    'BridgeKick': NotImplementedOperation,
+    'BridgeList': NotImplementedOperation,
+    'BridgeTechnologyList': NotImplementedOperation,       
+    'BridgeTechnologySuspend': NotImplementedOperation,    
+    'BridgeTechnologyUnsuspend': NotImplementedOperation,  
+    'CancelAtxfer': NotImplementedOperation,
+    'Challenge': NotImplementedOperation,
+    'Command': NotImplementedOperation,
+    'ConfbridgeKick': NotImplementedOperation,
+    'ConfbridgeList': NotImplementedOperation,
+    'ConfbridgeListRooms': NotImplementedOperation,        
+    'ConfbridgeLock': NotImplementedOperation,
+    'ConfbridgeMute': NotImplementedOperation,
+    'ConfbridgeSetSingleVideoSrc': NotImplementedOperation,
+    'ConfbridgeStartRecord': NotImplementedOperation,      
+    'ConfbridgeStopRecord': NotImplementedOperation,       
+    'ConfbridgeUnlock': NotImplementedOperation,
+    'ConfbridgeUnmute': NotImplementedOperation,
+    'ControlPlayback': NotImplementedOperation,
+    'CoreSettings': NotImplementedOperation,
+    'CoreShowChannelMap': NotImplementedOperation,
+    'CoreShowChannels': NotImplementedOperation,
+    'CoreStatus': CoreStatus,
+    'CreateConfig': NotImplementedOperation,
+    'DAHDIDNDoff': NotImplementedOperation,
+    'DAHDIDNDon': NotImplementedOperation,
+    'DAHDIDialOffhook': NotImplementedOperation,
+    'DAHDIHangup': NotImplementedOperation,
+    'DAHDIRestart': NotImplementedOperation,
+    'DAHDIShowChannels': NotImplementedOperation,
+    'DAHDIShowStatus': NotImplementedOperation,
+    'DAHDITransfer': NotImplementedOperation,
+    'DBDel': NotImplementedOperation,
+    'DBDelTree': NotImplementedOperation,
+    'DBGet': NotImplementedOperation,
+    'DBGetTree': NotImplementedOperation,
+    'DBPut': NotImplementedOperation,
+    'DeviceStateList': NotImplementedOperation,
+    'DialplanExtensionAdd': NotImplementedOperation,
+    'DialplanExtensionRemove': NotImplementedOperation,
+    'Events': NotImplementedOperation,
+    'ExtensionState': NotImplementedOperation,
+    'ExtensionStateList': NotImplementedOperation,
+    'FAXSession': NotImplementedOperation,
+    'FAXSessions': NotImplementedOperation,
+    'FAXStats': NotImplementedOperation,
+    'Filter': NotImplementedOperation,
+    'GetConfig': NotImplementedOperation,
+    'GetConfigJSON': NotImplementedOperation,
+    'Getvar': NotImplementedOperation,
+    'Hangup': NotImplementedOperation,
+    'IAXnetstats': NotImplementedOperation,
+    'IAXpeerlist': NotImplementedOperation,
+    'IAXpeers': NotImplementedOperation,
+    'IAXregistry': NotImplementedOperation,
+    'JabberSend': NotImplementedOperation,
+    'ListCategories': NotImplementedOperation,
+    'ListCommands': NotImplementedOperation,
+    'LocalOptimizeAway': NotImplementedOperation,
+    'LoggerRotate': NotImplementedOperation,
     'Login': Login,
     'Logoff': Logoff,
-    'MWIDelete': None, # NotImplementedYet
-    'MWIGet': None, # NotImplementedYet
-    'MWIUpdate': None, # NotImplementedYet
-    'MailboxCount': None, # NotImplementedYet
-    'MailboxStatus': None, # NotImplementedYet
-    'MeetmeList': None, # NotImplementedYet
-    'MeetmeListRooms': None, # NotImplementedYet
-    'MeetmeMute': None, # NotImplementedYet
-    'MeetmeUnmute': None, # NotImplementedYet
-    'MessageSend': None, # NotImplementedYet
-    'MixMonitor': None, # NotImplementedYet
-    'MixMonitorMute': None, # NotImplementedYet
-    'ModuleCheck': None, # NotImplementedYet
-    'ModuleLoad': None, # NotImplementedYet
-    'MuteAudio': None, # NotImplementedYet
+    'MWIDelete': NotImplementedOperation,
+    'MWIGet': NotImplementedOperation,
+    'MWIUpdate': NotImplementedOperation,
+    'MailboxCount': NotImplementedOperation,
+    'MailboxStatus': NotImplementedOperation,
+    'MeetmeList': NotImplementedOperation,
+    'MeetmeListRooms': NotImplementedOperation,
+    'MeetmeMute': NotImplementedOperation,
+    'MeetmeUnmute': NotImplementedOperation,
+    'MessageSend': NotImplementedOperation,
+    'MixMonitor': NotImplementedOperation,
+    'MixMonitorMute': NotImplementedOperation,
+    'ModuleCheck': NotImplementedOperation,
+    'ModuleLoad': NotImplementedOperation,
+    'MuteAudio': NotImplementedOperation,
     'Originate': Originate,
-    'PJSIPHangup': None, # NotImplementedYet
-    'PJSIPNotify': None, # NotImplementedYet
-    'PJSIPQualify': None, # NotImplementedYet
-    'PJSIPRegister': None, # NotImplementedYet
-    'PJSIPShowAors': None, # NotImplementedYet
-    'PJSIPShowAuths': None, # NotImplementedYet
-    'PJSIPShowContacts': None, # NotImplementedYet
-    'PJSIPShowEndpoint': None, # NotImplementedYet
-    'PJSIPShowEndpoints': None, # NotImplementedYet
-    'PJSIPShowRegistrationInboundContactStatuses': None, # NotImplementedYet
-    'PJSIPShowRegistrationsInbound': None, # NotImplementedYet
-    'PJSIPShowRegistrationsOutbound': None, # NotImplementedYet
-    'PJSIPShowResourceLists': None, # NotImplementedYet
-    'PJSIPShowSubscriptionsInbound': None, # NotImplementedYet
-    'PJSIPShowSubscriptionsOutbound': None, # NotImplementedYet
-    'PJSIPUnregister': None, # NotImplementedYet
-    'PRIDebugFileSet': None, # NotImplementedYet
-    'PRIDebugFileUnset': None, # NotImplementedYet
-    'PRIDebugSet': None, # NotImplementedYet
-    'PRIShowSpans': None, # NotImplementedYet
-    'Park': None, # NotImplementedYet
-    'ParkedCalls': None, # NotImplementedYet
-    'Parkinglots': None, # NotImplementedYet
+    'PJSIPHangup': NotImplementedOperation,
+    'PJSIPNotify': NotImplementedOperation,
+    'PJSIPQualify': NotImplementedOperation,
+    'PJSIPRegister': NotImplementedOperation,
+    'PJSIPShowAors': NotImplementedOperation,
+    'PJSIPShowAuths': NotImplementedOperation,
+    'PJSIPShowContacts': NotImplementedOperation,
+    'PJSIPShowEndpoint': NotImplementedOperation,
+    'PJSIPShowEndpoints': NotImplementedOperation,
+    'PJSIPShowRegistrationInboundContactStatuses': NotImplementedOperation,
+    'PJSIPShowRegistrationsInbound': NotImplementedOperation,
+    'PJSIPShowRegistrationsOutbound': NotImplementedOperation,
+    'PJSIPShowResourceLists': NotImplementedOperation,
+    'PJSIPShowSubscriptionsInbound': NotImplementedOperation,
+    'PJSIPShowSubscriptionsOutbound': NotImplementedOperation,
+    'PJSIPUnregister': NotImplementedOperation,
+    'PRIDebugFileSet': NotImplementedOperation,
+    'PRIDebugFileUnset': NotImplementedOperation,
+    'PRIDebugSet': NotImplementedOperation,
+    'PRIShowSpans': NotImplementedOperation,
+    'Park': NotImplementedOperation,
+    'ParkedCalls': NotImplementedOperation,
+    'Parkinglots': NotImplementedOperation,
     'Ping': Ping,
-    'PlayDTMF': None, # NotImplementedYet
-    'PlayMF': None, # NotImplementedYet
-    'PresenceState': None, # NotImplementedYet
-    'PresenceStateList': None, # NotImplementedYet
-    'QueueAdd': None, # NotImplementedYet
-    'QueueChangePriorityCaller': None, # NotImplementedYet
-    'QueueLog': None, # NotImplementedYet
-    'QueueMemberRingInUse': None, # NotImplementedYet
-    'QueuePause': None, # NotImplementedYet
-    'QueuePenalty': None, # NotImplementedYet
-    'QueueReload': None, # NotImplementedYet
-    'QueueRemove': None, # NotImplementedYet
-    'QueueReset': None, # NotImplementedYet
-    'QueueRule': None, # NotImplementedYet
-    'QueueStatus': None, # NotImplementedYet
-    'QueueSummary': None, # NotImplementedYet
-    'QueueWithdrawCaller': None, # NotImplementedYet
-    'Redirect': None, # NotImplementedYet
-    'Reload': None, # NotImplementedYet
-    'SendFlash': None, # NotImplementedYet
-    'SendText': None, # NotImplementedYet
-    'Setvar': None, # NotImplementedYet
-    'ShowDialPlan': None, # NotImplementedYet
-    'SorceryMemoryCacheExpire': None, # NotImplementedYet
-    'SorceryMemoryCacheExpireObject': None, # NotImplementedYet
-    'SorceryMemoryCachePopulate': None, # NotImplementedYet
-    'SorceryMemoryCacheStale': None, # NotImplementedYet
-    'SorceryMemoryCacheStaleObject': None, # NotImplementedYet
-    'Status': None, # NotImplementedYet
-    'StopMixMonitor': None, # NotImplementedYet
-    'UpdateConfig': None, # NotImplementedYet
-    'UserEvent': None, # NotImplementedYet
-    'VoicemailBoxSummary': None, # NotImplementedYet
-    'VoicemailForward': None, # NotImplementedYet
-    'VoicemailMove': None, # NotImplementedYet
-    'VoicemailRefresh': None, # NotImplementedYet
-    'VoicemailRemove': None, # NotImplementedYet
-    'VoicemailUserStatus': None, # NotImplementedYet
-    'VoicemailUsersList': None, # NotImplementedYet
-    'WaitEvent': None, # NotImplementedYet
+    'PlayDTMF': NotImplementedOperation,
+    'PlayMF': NotImplementedOperation,
+    'PresenceState': NotImplementedOperation,
+    'PresenceStateList': NotImplementedOperation,
+    'QueueAdd': NotImplementedOperation,
+    'QueueChangePriorityCaller': NotImplementedOperation,
+    'QueueLog': NotImplementedOperation,
+    'QueueMemberRingInUse': NotImplementedOperation,
+    'QueuePause': NotImplementedOperation,
+    'QueuePenalty': NotImplementedOperation,
+    'QueueReload': NotImplementedOperation,
+    'QueueRemove': NotImplementedOperation,
+    'QueueReset': NotImplementedOperation,
+    'QueueRule': NotImplementedOperation,
+    'QueueStatus': NotImplementedOperation,
+    'QueueSummary': NotImplementedOperation,
+    'QueueWithdrawCaller': NotImplementedOperation,
+    'Redirect': NotImplementedOperation,
+    'Reload': NotImplementedOperation,
+    'SendFlash': NotImplementedOperation,
+    'SendText': NotImplementedOperation,
+    'Setvar': NotImplementedOperation,
+    'ShowDialPlan': NotImplementedOperation,
+    'SorceryMemoryCacheExpire': NotImplementedOperation,
+    'SorceryMemoryCacheExpireObject': NotImplementedOperation,
+    'SorceryMemoryCachePopulate': NotImplementedOperation,
+    'SorceryMemoryCacheStale': NotImplementedOperation,
+    'SorceryMemoryCacheStaleObject': NotImplementedOperation,
+    'Status': NotImplementedOperation,
+    'StopMixMonitor': NotImplementedOperation,
+    'UpdateConfig': NotImplementedOperation,
+    'UserEvent': NotImplementedOperation,
+    'VoicemailBoxSummary': NotImplementedOperation,
+    'VoicemailForward': NotImplementedOperation,
+    'VoicemailMove': NotImplementedOperation,
+    'VoicemailRefresh': NotImplementedOperation,
+    'VoicemailRemove': NotImplementedOperation,
+    'VoicemailUserStatus': NotImplementedOperation,
+    'VoicemailUsersList': NotImplementedOperation,
+    'WaitEvent': NotImplementedOperation,
 }
 
 __all__ = [
     'Action',
+    'PendingAction',
     'action_map',
     'CoreStatus',
     'Login',

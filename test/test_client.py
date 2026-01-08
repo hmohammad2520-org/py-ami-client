@@ -29,4 +29,4 @@ def test_auth():
 
 def test_core_status():
     ami_client = test_create_client()
-    assert CoreStatus().send(ami_client, close_connection=True)
+    assert ami_client.send_action(CoreStatus())

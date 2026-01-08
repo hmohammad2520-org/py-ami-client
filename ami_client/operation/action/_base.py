@@ -1,57 +1,43 @@
-import time, random
+import random, threading
+from dataclasses import dataclass
 from typing import Optional
-from ...operation.response import Response
-from ...operation._base import Operation
 
+from ...operation import Operation
+from ..response import Response
+
+@dataclass
 class Action(Operation):
-    def __init__(self, Action: str ,ActionID: Optional[int] = None, **kwargs) -> None:
-        self._sent_to_server: bool = False
-        self.server_response: Response | None = None
-        self.action = Action
-        self.action_id: int = int(ActionID) if ActionID else random.randint(0, 1_000_000_000)
-        super().__init__(Action=Action, ActionID=self.action_id, **kwargs)
+    ActionID: int = 0
 
-    def send(
-            self,
-            client,
-            raise_timeout: bool = True,
-            raise_on_error_response: bool = True,
-            check_connection: bool = True,
-            check_authentication: bool = True,
-            close_connection: bool = False,
-        ) -> Response | None:
-        if check_connection:
-            client.connect() if not client.is_connected() else None
+    def __post_init__(self):
+        self.Action = self._asterisk_name
+        if self.ActionID in (0, None):
+            self.ActionID = random.randint(1, 100_000_000)
 
-        if check_authentication:
-            client.login() if not client.is_authenticated() else None
 
-        action_string = self.convert_to_raw_content(self._dict)
-        client.socket.sendall(action_string.encode())
-        self._sent_to_server = True
-
-        start = time.time()
-        while (time.time() - start) < client._timeout:
-            response: Response | None = client.registry.get_response(self.action_id)
-            time.sleep(0.005)  # to prevent tight locking
-            if response is not None: break
-
+class PendingAction:
+    def __init__(self, action: Action) -> None:
+        self.action = action
+        self.__response = None
+        self._thread_event = threading.Event()
+    
+    @property
+    def response(self) -> Response:
+        if self.__response:
+            return self.__response
+        
         else:
-            if raise_timeout and response is None:
-                raise TimeoutError(
-                    f'Timeout while getting response. action: {self.action} - action id: {self.action_id}'
-                )
+            return self.wait(5)
 
-        if close_connection:
-            client.disconnect()
+    def set_response(self, response: Response) -> None:
+        self.__response = response
+        self._thread_event.set()
+    
+    def wait(self, timeout: Optional[float] = None) -> Response:
+        finished = self._thread_event.wait(timeout)
+        if not finished:
+            raise TimeoutError(f"No response received for action {self.action.ActionID}")
 
-        self.server_response = response
+        if not self.__response: raise
 
-        if response and raise_on_error_response:
-            response.raise_on_status()
-
-        return response
-
-
-    def __bool__(self) -> bool:
-        return self._sent_to_server
+        return self.__response
