@@ -3,10 +3,19 @@ from typing import Optional
 
 from ._base import Event, ChannelEventMixin
 
+class AGI:
+    ...
+
+
 @dataclass
-class AGIExecEnd(Event, ChannelEventMixin):
+class AGIMixin:
     Command: Optional[str] = None
     CommandId: Optional[str] = None
+
+
+@dataclass
+class AGIExecEnd(Event, ChannelEventMixin, AGIMixin):
+    """Raised when a received AGI command completes processing."""
     ResultCode: Optional[str] = None
     Result: Optional[str] = None
 
@@ -17,9 +26,8 @@ class AGIExecEnd(Event, ChannelEventMixin):
 
 
 @dataclass
-class AGIExecStart(Event, ChannelEventMixin):
-    Command: Optional[str] = None
-    CommandId: Optional[str] = None
+class AGIExecStart(Event, ChannelEventMixin, AGIMixin):
+    """Raised when a received AGI command starts processing."""
 
     def __post_init__(self):
         self._asterisk_name = 'AGIExecStart'
