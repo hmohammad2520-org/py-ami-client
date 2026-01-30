@@ -33,7 +33,7 @@ class Operation:
         for line in lines:
             if ASTERISK_BANNER in line: continue
             key, value = line.split(':', 1)
-            operation_dict[key.lstrip()] = value.lstrip()
+            operation_dict[key.lstrip().replace('-', '_')] = value.lstrip()
 
         return operation_dict
 
@@ -63,6 +63,7 @@ class Operation:
         return f'<Operation: {self._asterisk_name}>'
 
 
+@dataclass(init=False)
 class NotImplementedOperation(Operation):
     def __init__(self, *args, **kwargs) -> None:
         self.args = args
@@ -75,11 +76,11 @@ class NotImplementedOperation(Operation):
         self._asterisk_name: str = getattr(
             self, 'Event', getattr(
                 self, 'Response', getattr(
-                    self, 'Action'
+                    self, 'Action', 'UnkhownAsteriskName'
                 )
             )
         )
-        if not self._asterisk_name:
+        if self._asterisk_name == 'UnkhownAsteriskName':
             raise ValueError('Unkhown Operation type: Must have `Event` or `Response` or `Action` as keyword argument')
 
         self._label: str = self._asterisk_name

@@ -13,6 +13,7 @@ ChannelStateDescType: TypeAlias = Literal[
 @dataclass
 class Event(Operation):
     Event: Optional[str] = None
+    Privilege: Optional[str] = None
 
     def __post_init__(self):
         self.Event = self._asterisk_name

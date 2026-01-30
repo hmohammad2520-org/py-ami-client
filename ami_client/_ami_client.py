@@ -9,7 +9,7 @@ from .operation import (
     Action, PendingAction,
     Event, EventDispatcher, 
     Response,
-    action_map, event_map, response_map,
+    action_map, response_map, event_map,
 )
 from .operation.action import Login, Logoff, Ping
 
@@ -37,7 +37,6 @@ class AMIClient:
             events: Optional[Union[Literal['on', 'off'], list[str]]] = None,
             timeout: Optional[int] = None,
             socket_buffer: Optional[int] = None,
-            event_queue_maxsize: Optional[int] = None,
         ) -> None:
         """
         A client for interacting with the Asterisk Manager Interface (AMI) over a socket connection.
@@ -58,7 +57,6 @@ class AMIClient:
             events (Optional[Union[Literal['on', 'off'], list[str]]]): Event subscriptions or list.
             timeout (int): Socket connection timeout in seconds.
             socket_buffer (int): Size of buffer for reading socket data.
-            event_queue_maxsize (int): Size of queue of events for dispatching.
         """
         self._host = host or '127.0.0.1'
         self._port = port or 5038
@@ -69,13 +67,12 @@ class AMIClient:
         self._events = events
         self._timeout = timeout or 3
         self._socket_buffer = socket_buffer or 2048
-        self._event_queue_maxsize = event_queue_maxsize or 100_000
 
         self._lock = threading.Lock()
         self._pending_actions: Dict[int, PendingAction] = {}
 
         self._event_dispatcher = EventDispatcher()
-        self._event_queue = queue.Queue(maxsize=self._event_queue_maxsize)
+        self._event_queue = queue.Queue()
 
         self.whitelist: Set[Type[Operation]] = set()
         self.blacklist: Set[Type[Operation]] = set()
@@ -105,6 +102,7 @@ class AMIClient:
         self.send_action(
             Ping(),
             check_connection=False,
+            check_authentication=False,
         )
         return True
 
@@ -156,7 +154,7 @@ class AMIClient:
         while self.is_connected():
             try:
                 # Wait for event, timeout allows checking stop_event periodically
-                operation = self._event_queue.get(timeout=0.5)
+                operation = self._event_queue.get(timeout=0.2)
             except queue.Empty:
                 continue
 
@@ -211,22 +209,12 @@ class AMIClient:
 
                 if operation is None:
                     logger.debug(
-                        f"Operation Black or Whitelisted: <{decoded_operation[0:30].replace('\r\n', ' ')}...>"
+                        f"Operation blocked: <{decoded_operation[0:30].replace('\r\n', ' ')}...>"
                     )
                     continue
 
                 if isinstance(operation, Event):
-                    try:
-                        ## TODO: Implement queue-based dispatcher
-                        self._event_queue.put(operation, block=False)
-                    except queue.Full:
-                        logger.warning("Event queue full, dropping event: %s", operation.Event)
-
-                    except Exception:
-                        logger.error(
-                            f"Error while dispatching event: <{operation.Event}>:\n{traceback.format_exc()}"
-                        )
-                        continue
+                    self._event_queue.put(operation, block=False)
 
                 if isinstance(operation, Response):
                     with self._lock:
