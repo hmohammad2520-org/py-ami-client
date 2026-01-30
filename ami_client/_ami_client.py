@@ -1,5 +1,5 @@
 import time, logging, socket, threading, traceback, queue
-from classmods import ENVMod, suppress_errors
+from classmods import ENVMod, suppress_errors, logwrap
 from typing import (
     Any, Callable, Dict, List, Literal, Optional,
     Self, Set, Tuple, Type, Union, cast,
@@ -87,10 +87,16 @@ class AMIClient:
             bool: True if connected, False if any socket error occurs.
         """
         if hasattr(socket, 'MSG_DONTWAIT'): 
-            data = self._socket.send(b'', socket.MSG_DONTWAIT)  # type: ignore
+            _ = self._socket.send(b'', socket.MSG_DONTWAIT)  # type: ignore
         else: self._socket.send(b'')
         return True
 
+    @logwrap(
+            before=False,
+            on_exception=False,
+            after=(logging.DEBUG, 'Checking authentication: {result}'),
+            logger=logger,
+    )
     @suppress_errors(False)
     def is_authenticated(self) -> bool:
         """
@@ -107,6 +113,12 @@ class AMIClient:
         return True
 
 
+    @logwrap(
+            before='Connecting to server...',
+            on_exception='Error while connecting to server: {e}',
+            after='Connected to server',
+            logger=logger,
+        )
     def connect(self) -> None:
         """Establish a TCP connection to the AMI server and start the dispatcher and listener thread."""
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -122,6 +134,12 @@ class AMIClient:
         self._event_dispatcher_thread.start()
         self._listen_thread.start()
 
+    @logwrap(
+            before='Disconnecting from server...',
+            on_exception='Error while disconnecting to server: {e}',
+            after='Disconnected from server',
+            logger=logger,
+        )
     def disconnect(self) -> None:
         """
         Close the socket connection and stop the listening thread safely.
@@ -149,12 +167,18 @@ class AMIClient:
 
         return operation_class(**operation_dict)
 
+    @logwrap(
+            before='Starting `event_dispatcher_loop`',
+            on_exception='Error in `event_dispatcher_loop`: {e}',
+            after='`event_dispatcher_loop` stoped',
+            logger=logger,
+        )
     def _event_dispatcher_loop(self) -> None:
         """Worker thread: consumes events from queue and calls handlers."""
         while self.is_connected():
             try:
                 # Wait for event, timeout allows checking stop_event periodically
-                operation = self._event_queue.get(timeout=0.2)
+                operation = self._event_queue.get(timeout=self._timeout)
             except queue.Empty:
                 continue
 
@@ -168,6 +192,12 @@ class AMIClient:
             finally:
                 self._event_queue.task_done()
 
+    @logwrap(
+            before='Starting `_listener_loop`',
+            on_exception='Error in `_listener_loop`: {e}',
+            after='`_listener_loop` stoped',
+            logger=logger,
+        )
     def _listener_loop(self) -> None:
         """
         Internal method that runs in a separate thread to continuously receive and
@@ -179,7 +209,7 @@ class AMIClient:
             try:
                 data = self._socket.recv(self._socket_buffer)
             except TimeoutError:
-                time.sleep(0.5)
+                time.sleep(self._timeout)
                 continue
 
             except OSError as e:
@@ -209,7 +239,7 @@ class AMIClient:
 
                 if operation is None:
                     logger.debug(
-                        f"Operation blocked: <{decoded_operation[0:30].replace('\r\n', ' ')}...>"
+                        f"Operation blocked: <{decoded_operation[0:60].replace('\r\n', ' ')}...>"
                     )
                     continue
 
@@ -223,7 +253,13 @@ class AMIClient:
                             pending.set_response(operation)
 
 
-    def on_event(self, key: Type[Event]):
+    @logwrap(
+        before=False,
+        on_exception=False,
+        after='New Function registered for dispatching: {kwargs}',
+        logger=logger,
+    )
+    def on_event(self, event: Type[Event]):
         """
         Decorator to register an event handler.
 
@@ -235,11 +271,17 @@ class AMIClient:
             def handler(event): ...
         """
         def decorator(func: Callable[[Event], None]):
-            self._event_dispatcher.register(key, func)
+            self._event_dispatcher.register(event, func)
             return func
 
         return decorator
 
+    @logwrap(
+        before='Sending action: {kwargs}',
+        on_exception='Error while sending action: {kwargs} error: {e}',
+        after='Action sent: {kwargs}',
+        logger=logger,
+    )
     def send_action(
             self,
             action: Action,
@@ -266,14 +308,19 @@ class AMIClient:
         return pending
 
 
-    def login(self) -> PendingAction:
+    @logwrap(
+        before='Login to server',
+        on_exception='Error while login: {e}',
+        after='Login completed',
+        logger=logger,
+    )
+    def login(self) -> Response:
         """
         Authenticate with the AMI server using the provided credentials.
 
         Returns:
             Response: The response received from the server after login attempt.
         """
-        
         return self.send_action(
             Login(
                 Username = self._username,
@@ -281,75 +328,105 @@ class AMIClient:
                 AuthType = cast(Optional[Literal['plain', 'MD5']], self._auth_type),
                 Key = self._key,
                 Events = cast(Optional[Union[Literal['on', 'off'], list[str]]], self._events),
-            ), 
+            ),
             check_authentication=False,
-        )
+        ).wait(self._timeout)
 
-    def logoff(self) -> PendingAction:
+    @logwrap(
+        before='Logoff from server',
+        on_exception='Error while Logoff: {e}',
+        after='Logoff Completed',
+        logger=logger,
+    )
+    def logoff(self) -> None:
         """
         Send a logoff command to the AMI server if currently authenticated.
 
         Returns:
             Response | None: The logoff response or None if not authenticated.
         """
-        return self.send_action(
+        self.send_action(
             Logoff(),
             close_connection=True,
         )
 
-    def add_whitelist(self, items: List[Type]) -> None:
+    @logwrap(
+        before=False,
+        on_exception=False,
+        after='Added Events to whitelist: {kwargs}',
+        logger=logger,
+    )
+    def add_whitelist(self, events: List[Type]) -> None:
         """
         Add item types to the whitelist.
 
         Args:
-            items (List[Type]): A list of operation types to allow.
+            events (List[Type]): A list of operation types to allow.
         """
-        for item in items:
-            self.whitelist.add(item)
+        for event in events:
+            self.whitelist.add(event)
 
-    def add_blacklist(self, items: List[Type]) -> None:
+    @logwrap(
+        before=False,
+        on_exception=False,
+        after='Added Events to blacklist: {kwargs}',
+        logger=logger,
+    )
+    def add_blacklist(self, events: List[Type]) -> None:
         """
         Add item types to the blacklist.
 
         Args:
-            items (List[Type]): A list of operation types to block.
+            events (List[Type]): A list of operation types to block.
         """
-        for item in items:
-            self.blacklist.add(item)
+        for event in events:
+            self.blacklist.add(event)
 
-    def remove_whitelist(self, items: List[Type]) -> None:
+    @logwrap(
+        before=False,
+        on_exception=False,
+        after='Removed Events from whitelist: {kwargs}',
+        logger=logger,
+    )
+    def remove_whitelist(self, events: List[Type]) -> None:
         """
         Remove item types from the whitelist.
 
         Args:
-            items (List[Type]): A list of operation types to remove.
+            events (List[Type]): A list of operation types to remove.
         """
-        for item in items:
-            self.whitelist.remove(item)
+        for event in events:
+            self.whitelist.remove(event)
 
-    def remove_blacklist(self, items: List[Type]) -> None:
+    @logwrap(
+        before=False,
+        on_exception=False,
+        after='Removed Events from blacklist: {kwargs}',
+        logger=logger,
+    )
+    def remove_blacklist(self, events: List[Type]) -> None:
         """
         Remove item types from the blacklist.
 
         Args:
-            items (List[Type]): A list of operation types to remove.
+            events (List[Type]): A list of operation types to remove.
         """
-        for item in items:
-            self.whitelist.remove(item)
+        for event in events:
+            self.whitelist.remove(event)
 
 
     def __enter__(self) -> Self:
-        """
-        Enter the runtime context and automatically connect and log in.
-
-        Returns:
-            Self: The connected and authenticated client instance.
-        """
         self.connect()
         self.login()
         return self
 
     def __exit__(self, type, value, traceback) -> None:
-        """Exit the runtime context, logging out and disconnecting from the AMI server."""
         self.logoff()
         self.disconnect()
+
+
+    def __str__(self) -> str:
+        return f'<AMIClient {self._host}:{self._port}>'
+    
+    def __repr__(self) -> str:
+        return f'AMIClient(host={self._host}, port={self._port})'
