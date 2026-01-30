@@ -36,6 +36,7 @@ class ChannelEventMixin:
     Uniqueid: Optional[str] = None
     Linkedid: Optional[str] = None
 
+
 @dataclass
 class DestChannelEventMixin:
     DestChannel: Optional[str] = None
@@ -52,6 +53,41 @@ class DestChannelEventMixin:
     DestPriority: Optional[str] = None
     DestUniqueid: Optional[str] = None
     DestLinkedid: Optional[str] = None
+
+@dataclass
+class TransfererChannelEventMixin:
+    TransfererChannel: Optional[str] = None
+    TransfererChannelState: Optional[str] = None
+    TransfererChannelStateDesc: Optional[ChannelStateDescType] = None
+    TransfererCallerIDNum: Optional[str] = None
+    TransfererCallerIDName: Optional[str] = None
+    TransfererConnectedLineNum: Optional[str] = None
+    TransfererConnectedLineName: Optional[str] = None
+    TransfererLanguage: Optional[str] = None
+    TransfererAccountCode: Optional[str] = None
+    TransfererContext: Optional[str] = None
+    TransfererExten: Optional[str] = None
+    TransfererPriority: Optional[str] = None
+    TransfererUniqueid: Optional[str] = None
+    TransfererLinkedid: Optional[str] = None
+
+
+@dataclass
+class TransfereeChannelEventMixin:
+    TransfereeChannel: Optional[str] = None
+    TransfereeChannelState: Optional[str] = None
+    TransfereeChannelStateDesc: Optional[ChannelStateDescType] = None
+    TransfereeCallerIDNum: Optional[str] = None
+    TransfereeCallerIDName: Optional[str] = None
+    TransfereeConnectedLineNum: Optional[str] = None
+    TransfereeConnectedLineName: Optional[str] = None
+    TransfereeLanguage: Optional[str] = None
+    TransfereeAccountCode: Optional[str] = None
+    TransfereeContext: Optional[str] = None
+    TransfereeExten: Optional[str] = None
+    TransfereePriority: Optional[str] = None
+    TransfereeUniqueid: Optional[str] = None
+    TransfereeLinkedid: Optional[str] = None
 
 
 class EventDispatcher:
