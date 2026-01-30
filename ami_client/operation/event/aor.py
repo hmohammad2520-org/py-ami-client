@@ -6,6 +6,7 @@ from ._base import Event
 class AOR:
     """Marker base for all Alarm events"""
 
+
 @dataclass
 class AORMixin:
     ObjectType: Optional[str] = None
@@ -25,6 +26,7 @@ class AORMixin:
     QualifyTimeout: Optional[str] = None
     VoicemailExtension: Optional[str] = None
     Contacts: Optional[str] = None
+
 
 @dataclass
 class AorDetail(Event, AOR, AORMixin):

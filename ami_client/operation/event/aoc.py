@@ -29,6 +29,7 @@ UnitOptions: TypeAlias = Literal[
 class AOC:
     """Marker base for all AOC events"""
 
+
 @dataclass
 class AOCMixin:  # monetary identity
     Currency: Optional[str] = None

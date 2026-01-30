@@ -6,6 +6,7 @@ from ._base import Event
 class BaseAlarm:
     """Marker base for all Alarm events"""
 
+
 @dataclass
 class AlarmMixin:
     DAHDIChannel: Optional[str] = None
