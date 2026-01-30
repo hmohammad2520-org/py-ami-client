@@ -4,7 +4,7 @@ from typing import Optional
 from ._base import Event, ChannelEventMixin
 
 class AGI:
-    ...
+    """Marker base for all AGI events"""
 
 
 @dataclass

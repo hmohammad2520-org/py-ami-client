@@ -10,6 +10,7 @@ AuthSeverity: TypeAlias = Literal[
 class Auth:
     """Marker base for all Auth events"""
 
+
 @dataclass
 class AuthMixin:
     ObjectType: Optional[str] = None
