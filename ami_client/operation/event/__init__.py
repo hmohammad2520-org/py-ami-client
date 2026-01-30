@@ -4,10 +4,12 @@ from .agent import (
     Agent, AgentCalled, AgentComplete, AgentConnect, AgentDump, 
     AgentLogin, AgentLogoff, AgentRingNoAnswer, Agents, AgentsComplete,
 )
-from .agi_exec import AGIExecEnd, AGIExecStart
+from .agi import AGI, AGIExecEnd, AGIExecStart
 from .alarm import BaseAlarm, Alarm, AlarmClear
 from .aoc import AOC, AOC_D, AOC_E, AOC_S
 from .aor import AOR, AorDetail, AorList, AorListComplete
+from .async_agi import AsyncAGI, AsyncAGIEnd, AsyncAGIExec, AsyncAGIStart
+from .auth import Auth, AuthDetail, AuthList, AuthListComplete, AuthMethodNotAllowed
 from .hangup import Hangup
 from .newexten import Newexten
 from .varset import VarSet
@@ -34,14 +36,14 @@ event_map: dict[str, Type[Event] | Type[NotImplementedOperation]] = {
     'AorDetail': AorDetail,
     'AorList': AorList,
     'AorListComplete': AorListComplete,
-    'AsyncAGIEnd': NotImplementedOperation,
-    'AsyncAGIExec': NotImplementedOperation,
-    'AsyncAGIStart': NotImplementedOperation,
+    'AsyncAGIEnd': AsyncAGIEnd,
+    'AsyncAGIExec': AsyncAGIExec,
+    'AsyncAGIStart': AsyncAGIStart,
     'AttendedTransfer': NotImplementedOperation,
-    'AuthDetail': NotImplementedOperation,
-    'AuthList': NotImplementedOperation,
-    'AuthListComplete': NotImplementedOperation,
-    'AuthMethodNotAllowed': NotImplementedOperation,
+    'AuthDetail': AuthDetail,
+    'AuthList': AuthList,
+    'AuthListComplete': AuthListComplete,
+    'AuthMethodNotAllowed': AuthMethodNotAllowed,
     'BlindTransfer': NotImplementedOperation,
     'BridgeCreate': NotImplementedOperation,
     'BridgeDestroy': NotImplementedOperation,
@@ -197,12 +199,14 @@ __all__ = [
     'Event',
     'EventDispatcher',
     'event_map',
-    'AGIExecEnd', 'AGIExecStart',
+    'AGI', 'AGIExecEnd', 'AGIExecStart',
     'AOC', 'AOC_D', 'AOC_E', 'AOC_S',
     'Agent', 'AgentCalled', 'AgentComplete', 'AgentConnect', 'AgentDump',
     'AgentLogin', 'AgentLogoff', 'AgentRingNoAnswer', 'Agents', 'AgentsComplete',
     'BaseAlarm', 'Alarm', 'AlarmClear',
     'AOR', 'AorDetail', 'AorList', 'AorListComplete',
+    'AsyncAGI', 'AsyncAGIEnd', 'AsyncAGIExec', 'AsyncAGIStart',
+    'Auth', 'AuthDetail', 'AuthList', 'AuthListComplete', 'AuthMethodNotAllowed',
     'Hangup',
     'Newexten',
     'VarSet',
