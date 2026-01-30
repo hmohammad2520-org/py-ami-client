@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ._base import Event, ChannelEventMixin
+from ._base import Event, ChannelMixin
 
 @dataclass
-class Hangup(Event, ChannelEventMixin):
+class Hangup(Event, ChannelMixin):
     Cause: Optional[str] = None
     Cause_txt: Optional[str] = None
 

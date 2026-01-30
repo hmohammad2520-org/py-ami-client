@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ._base import Event, ChannelEventMixin
+from ._base import Event, ChannelMixin
 
 class AsyncAGI:
     """Marker base for all AsyncAGI events"""
 
 @dataclass
-class AsyncAGIEnd(Event, ChannelEventMixin, AsyncAGI):
+class AsyncAGIEnd(Event, ChannelMixin, AsyncAGI):
     """Raised when a channel stops AsyncAGI command processing."""
 
     def __post_init__(self):
@@ -17,7 +17,7 @@ class AsyncAGIEnd(Event, ChannelEventMixin, AsyncAGI):
 
 
 @dataclass
-class AsyncAGIExec(Event, ChannelEventMixin, AsyncAGI):
+class AsyncAGIExec(Event, ChannelMixin, AsyncAGI):
     """Raised when AsyncAGI completes an AGI command."""
     CommandID: Optional[str] = None
     Result: Optional[str] = None
@@ -29,7 +29,7 @@ class AsyncAGIExec(Event, ChannelEventMixin, AsyncAGI):
 
 
 @dataclass
-class AsyncAGIStart(Event, ChannelEventMixin, AsyncAGI):
+class AsyncAGIStart(Event, ChannelMixin, AsyncAGI):
     """Raised when a channel starts AsyncAGI command processing."""
     Env:  Optional[str] = None
 

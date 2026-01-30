@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ._base import Event, ChannelEventMixin
+from ._base import Event, ChannelMixin
 
 class AGI:
     """Marker base for all AGI events"""
@@ -14,7 +14,7 @@ class AGIMixin:
 
 
 @dataclass
-class AGIExecEnd(Event, ChannelEventMixin, AGIMixin):
+class AGIExecEnd(Event, ChannelMixin, AGIMixin):
     """Raised when a received AGI command completes processing."""
     ResultCode: Optional[str] = None
     Result: Optional[str] = None
@@ -26,7 +26,7 @@ class AGIExecEnd(Event, ChannelEventMixin, AGIMixin):
 
 
 @dataclass
-class AGIExecStart(Event, ChannelEventMixin, AGIMixin):
+class AGIExecStart(Event, ChannelMixin, AGIMixin):
     """Raised when a received AGI command starts processing."""
 
     def __post_init__(self):

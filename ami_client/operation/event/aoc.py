@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, TypeAlias, Literal
 
-from ._base import Event, ChannelEventMixin
+from ._base import Event, ChannelMixin
 
 TypeOptions: TypeAlias = Literal[
     'NotAvailable', 'Free', 'Currency', 'Units'
@@ -50,7 +50,7 @@ class AOCCommonMixin:  # charge accounting
 
 
 @dataclass
-class AOC_D(Event, AOC, ChannelEventMixin, AOCMixin, AOCCommonMixin):
+class AOC_D(Event, AOC, ChannelMixin, AOCMixin, AOCCommonMixin):
     def __post_init__(self):
         self._asterisk_name = 'AOC-D'
         self._label = 'Advice of Charge during a call'
@@ -58,7 +58,7 @@ class AOC_D(Event, AOC, ChannelEventMixin, AOCMixin, AOCCommonMixin):
 
 
 @dataclass
-class AOC_E(Event, AOC, ChannelEventMixin, AOCMixin, AOCCommonMixin):
+class AOC_E(Event, AOC, ChannelMixin, AOCMixin, AOCCommonMixin):
     ChargingAssociation: Optional[str] = None
     Number: Optional[str] = None
     Plan: Optional[str] = None
@@ -71,7 +71,7 @@ class AOC_E(Event, AOC, ChannelEventMixin, AOCMixin, AOCCommonMixin):
 
 
 @dataclass
-class AOC_S(Event, AOC, ChannelEventMixin, AOCMixin):
+class AOC_S(Event, AOC, ChannelMixin, AOCMixin):
     Chargeable: Optional[str] = None
     RateType: Optional[RateTypeOptions] = None
     ChargingType: Optional[str] = None

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, TypeAlias, Literal
 
-from ._base import Event, ChannelEventMixin, DestChannelEventMixin
+from ._base import Event, ChannelMixin, DestChannelMixin
 
 ResonOptions: TypeAlias = Literal[
     'caller', 'agent', 'transfer',
@@ -22,7 +22,7 @@ class AgentMixin:
 
 
 @dataclass
-class AgentCalled(Event, Agent, ChannelEventMixin, DestChannelEventMixin, AgentMixin):
+class AgentCalled(Event, Agent, ChannelMixin, DestChannelMixin, AgentMixin):
     """Raised when an queue member is notified of a caller in the queue."""
     def __post_init__(self):
         self._asterisk_name = 'AgentCalled'
@@ -31,7 +31,7 @@ class AgentCalled(Event, Agent, ChannelEventMixin, DestChannelEventMixin, AgentM
 
 
 @dataclass
-class AgentComplete(Event, Agent, ChannelEventMixin, DestChannelEventMixin, AgentMixin):
+class AgentComplete(Event, Agent, ChannelMixin, DestChannelMixin, AgentMixin):
     """Raised when a queue member has finished servicing a caller in the queue."""
     HoldTime: Optional[str] = None
     TalkTime: Optional[str] = None
@@ -43,7 +43,7 @@ class AgentComplete(Event, Agent, ChannelEventMixin, DestChannelEventMixin, Agen
         return super().__post_init__()
 
 @dataclass
-class AgentConnect(Event, Agent, ChannelEventMixin, DestChannelEventMixin, AgentMixin):
+class AgentConnect(Event, Agent, ChannelMixin, DestChannelMixin, AgentMixin):
     """Raised when a queue member answers and is bridged to a caller in the queue."""
     RingTime: Optional[str] = None
     HoldTime: Optional[str] = None
@@ -54,7 +54,7 @@ class AgentConnect(Event, Agent, ChannelEventMixin, DestChannelEventMixin, Agent
         return super().__post_init__()
 
 @dataclass
-class AgentDump(Event, Agent, ChannelEventMixin, DestChannelEventMixin, AgentMixin):
+class AgentDump(Event, Agent, ChannelMixin, DestChannelMixin, AgentMixin):
     """Raised when a queue member hangs up on a caller in the queue."""
     def __post_init__(self):
         self._asterisk_name = 'AgentDump'
@@ -63,7 +63,7 @@ class AgentDump(Event, Agent, ChannelEventMixin, DestChannelEventMixin, AgentMix
 
 
 @dataclass
-class AgentLogin(Event, Agent, ChannelEventMixin):
+class AgentLogin(Event, Agent, ChannelMixin):
     """Raised when an Agent has logged in."""
     Agent: Optional[str] = None
 
@@ -74,7 +74,7 @@ class AgentLogin(Event, Agent, ChannelEventMixin):
 
 
 @dataclass
-class AgentLogoff(Event, Agent, ChannelEventMixin):
+class AgentLogoff(Event, Agent, ChannelMixin):
     """Raised when an Agent has logged off."""
     Agent: Optional[str] = None
     Logintime: Optional[str] = None
@@ -86,7 +86,7 @@ class AgentLogoff(Event, Agent, ChannelEventMixin):
 
 
 @dataclass
-class AgentRingNoAnswer(Event, Agent, ChannelEventMixin, DestChannelEventMixin, AgentMixin):
+class AgentRingNoAnswer(Event, Agent, ChannelMixin, DestChannelMixin, AgentMixin):
     """Raised when a queue member is notified of a caller in the queue and fails to answer."""
     RingTime: Optional[str] = None
 
@@ -97,7 +97,7 @@ class AgentRingNoAnswer(Event, Agent, ChannelEventMixin, DestChannelEventMixin, 
 
 
 @dataclass
-class Agents(Event, Agent, ChannelEventMixin):
+class Agents(Event, Agent, ChannelMixin):
     """Response event in a series to the Agents AMI action containing information about a defined agent."""
     Agent: Optional[str] = None
     Name: Optional[str] = None

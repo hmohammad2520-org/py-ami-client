@@ -12,6 +12,11 @@ from .async_agi import AsyncAGI, AsyncAGIEnd, AsyncAGIExec, AsyncAGIStart
 from .auth import Auth, AuthDetail, AuthList, AuthListComplete, AuthMethodNotAllowed
 from .hangup import Hangup
 from .newexten import Newexten
+from .queue import (
+    Queue, QueueCallerAbandon, QueueCallerJoin, QueueCallerLeave, QueueEntry, 
+    QueueMemberAdded, QueueMemberPause, QueueMemberPenalty, QueueMemberRemoved, 
+    QueueMemberRinginuse, QueueMemberStatus, QueueParams,
+)
 from .varset import VarSet
 
 from ...operation import NotImplementedOperation
@@ -154,17 +159,17 @@ event_map: dict[str, Type[Event] | Type[NotImplementedOperation]] = {
     'PresenceStateChange': NotImplementedOperation,
     'PresenceStateListComplete': NotImplementedOperation,
     'PresenceStatus': NotImplementedOperation,
-    'QueueCallerAbandon': NotImplementedOperation,
-    'QueueCallerJoin': NotImplementedOperation,
-    'QueueCallerLeave': NotImplementedOperation,
-    'QueueEntry': NotImplementedOperation,
-    'QueueMemberAdded': NotImplementedOperation,
-    'QueueMemberPause': NotImplementedOperation,
-    'QueueMemberPenalty': NotImplementedOperation,
-    'QueueMemberRemoved': NotImplementedOperation,
-    'QueueMemberRinginuse': NotImplementedOperation,
-    'QueueMemberStatus': NotImplementedOperation,
-    'QueueParams': NotImplementedOperation,
+    'QueueCallerAbandon': QueueCallerAbandon,
+    'QueueCallerJoin': QueueCallerJoin,
+    'QueueCallerLeave': QueueCallerLeave,
+    'QueueEntry': QueueEntry,
+    'QueueMemberAdded': QueueMemberAdded,
+    'QueueMemberPause': QueueMemberPause,
+    'QueueMemberPenalty': QueueMemberPenalty,
+    'QueueMemberRemoved': QueueMemberRemoved,
+    'QueueMemberRinginuse': QueueMemberRinginuse,
+    'QueueMemberStatus': QueueMemberStatus,
+    'QueueParams': QueueParams,
     'RTCPReceived': NotImplementedOperation,
     'RTCPSent': NotImplementedOperation,
     'ReceiveFAX': NotImplementedOperation,
@@ -209,5 +214,8 @@ __all__ = [
     'Auth', 'AuthDetail', 'AuthList', 'AuthListComplete', 'AuthMethodNotAllowed',
     'Hangup',
     'Newexten',
+    'Queue', 'QueueCallerAbandon', 'QueueCallerJoin', 'QueueCallerLeave', 'QueueEntry', 
+    'QueueMemberAdded', 'QueueMemberPause', 'QueueMemberPenalty', 'QueueMemberRemoved', 
+    'QueueMemberRinginuse', 'QueueMemberStatus', 'QueueParams',
     'VarSet',
 ]

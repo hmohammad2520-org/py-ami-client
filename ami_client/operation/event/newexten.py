@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ._base import Event, ChannelEventMixin
+from ._base import Event, ChannelMixin
 
 @dataclass
-class Newexten(Event, ChannelEventMixin):
+class Newexten(Event, ChannelMixin):
     Extension: Optional[str] = None
     Application: Optional[str] = None
     AppData: Optional[str] = None

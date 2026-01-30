@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ._base import Event, ChannelEventMixin
+from ._base import Event, ChannelMixin
 
 @dataclass
-class VarSet(Event, ChannelEventMixin):
+class VarSet(Event, ChannelMixin):
     Variable: Optional[str] = None
     Value: Optional[str] = None
 

@@ -20,7 +20,7 @@ class Event(Operation):
 
 
 @dataclass
-class ChannelEventMixin:
+class ChannelMixin:
     Channel: Optional[str] = None
     ChannelState: Optional[str] = None
     ChannelStateDesc: Optional[ChannelStateDescType] = None
@@ -38,7 +38,7 @@ class ChannelEventMixin:
 
 
 @dataclass
-class DestChannelEventMixin:
+class DestChannelMixin:
     DestChannel: Optional[str] = None
     DestChannelState: Optional[str] = None
     DestChannelStateDesc: Optional[ChannelStateDescType] = None
@@ -55,7 +55,7 @@ class DestChannelEventMixin:
     DestLinkedid: Optional[str] = None
 
 @dataclass
-class TransfererChannelEventMixin:
+class TransfererChannelMixin:
     TransfererChannel: Optional[str] = None
     TransfererChannelState: Optional[str] = None
     TransfererChannelStateDesc: Optional[ChannelStateDescType] = None
@@ -73,7 +73,7 @@ class TransfererChannelEventMixin:
 
 
 @dataclass
-class TransfereeChannelEventMixin:
+class TransfereeChannelMixin:
     TransfereeChannel: Optional[str] = None
     TransfereeChannelState: Optional[str] = None
     TransfereeChannelStateDesc: Optional[ChannelStateDescType] = None
