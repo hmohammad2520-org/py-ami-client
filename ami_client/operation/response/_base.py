@@ -14,6 +14,7 @@ class Response(Operation):
 
     def __post_init__(self) -> None:
         self.Response = self._asterisk_name
+        self.ActionID = int(self.ActionID)
 
     def raise_on_status(self) -> None:
         if self.Response == 'Error':

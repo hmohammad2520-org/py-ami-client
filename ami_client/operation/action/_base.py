@@ -12,7 +12,7 @@ class Action(Operation):
     def __post_init__(self):
         self.Action = self._asterisk_name
         if self.ActionID in (0, None):
-            self.ActionID = random.randint(1, 100_000_000)
+            self.ActionID = random.randint(1, 100_000_000_000)
 
 
 class PendingAction:

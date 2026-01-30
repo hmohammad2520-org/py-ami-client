@@ -5,8 +5,8 @@ ASTERISK_BANNER: str = 'Asterisk Call Manager'
 
 @dataclass
 class Operation:
-    _label: str = field(init=False)
-    _asterisk_name: str = field(init=False)
+    _label: str = field(init=False, repr=False)
+    _asterisk_name: str = field(init=False, repr=False)
 
     def to_dict(self) -> Dict[str, Any]:
         return {

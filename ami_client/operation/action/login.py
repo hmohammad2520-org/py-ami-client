@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal, Optional, Union
 
 from ._base import Action
@@ -6,7 +6,7 @@ from ._base import Action
 @dataclass
 class Login(Action):
     Username: Optional[str] = None
-    Secret: Optional[str] = None
+    Secret: Optional[str] = field(default=None, repr=False)
     AuthType: Optional[Literal['plain', 'MD5']] = None
     Key: Optional[str] = None
     Events: Optional[Union[Literal['on', 'off'], list[str]]] = None
