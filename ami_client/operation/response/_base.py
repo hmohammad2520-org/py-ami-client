@@ -1,14 +1,21 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from ...operation._base import Operation
-from ami_client._exeptions import AMIExceptions
 
+class ServerError(Exception):
+    ...
+
+@dataclass
 class Response(Operation):
-    message: str | None
+    Response: str
+    ActionID: int
+    Message: str
 
-    def __init__(self, Response: str, ActionID: int, **kwargs):
-        self.response = Response
-        self.action_id = int(ActionID)
-        super().__init__(Response=Response, ActionID=ActionID, **kwargs)
+    def __post_init__(self) -> None:
+        self.Response = self._asterisk_name
+        self.ActionID = int(self.ActionID)
 
     def raise_on_status(self) -> None:
-        if self.response == 'Error':
-            raise AMIExceptions.ServerError.ActionError(self.message)
+        if self.Response == 'Error':
+            raise ServerError(self.Message)
